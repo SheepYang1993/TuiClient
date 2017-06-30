@@ -8,4 +8,11 @@
     <color name="fab_pressed">#ff3763</color>
     <color name="fab_ripple">#ff3763</color>
     <color name="black_half_transparent">#af000000</color>
+    <color name="bg_gray">#f0f0f0</color>
+
+    <color name="yellow">#ffb20d</color>
+    <color name="blue">#FF1497DB</color>
+
+    <color name="bg_normal">#64dcdcdc</color>
+    <color name="bg_select">#ded4d4d4</color>
 </resources>
