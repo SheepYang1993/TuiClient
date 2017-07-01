@@ -77,7 +77,7 @@ public class AppManager {
      * 结束指定的Activity
      */
     public void finishActivity(Activity activity) {
-        if (activity != null) {
+        if (activity != null && activityStack != null) {
             activityStack.remove(activity);
             activity.finish();
             activity = null;
@@ -99,12 +99,14 @@ public class AppManager {
      * 结束所有Activity
      */
     public void finishAllActivity() {
-        for (int i = 0; i < activityStack.size(); i++) {
-            if (null != activityStack.get(i)) {
-                finishActivity(activityStack.get(i));
+        if (activityStack != null) {
+            for (int i = 0; i < activityStack.size(); i++) {
+                if (null != activityStack.get(i)) {
+                    finishActivity(activityStack.get(i));
+                }
             }
+            activityStack.clear();
         }
-        activityStack.clear();
         activityStack = null;
         mInstance = null;
     }
@@ -133,6 +135,7 @@ public class AppManager {
             activityMgr.killBackgroundProcesses(context.getPackageName());
             System.exit(0);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

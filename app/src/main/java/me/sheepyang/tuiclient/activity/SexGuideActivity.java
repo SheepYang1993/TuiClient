@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.SPUtils;
+import com.socks.library.KLog;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -61,6 +62,7 @@ public class SexGuideActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onBackPressed() {
+        KLog.i(Constants.TAG, System.currentTimeMillis() - mCurrentTime);
         if (System.currentTimeMillis() - mCurrentTime < 2000) {
             mCurrentTime = 0;
             AppUtil.exit(mActivity);
@@ -108,7 +110,7 @@ public class SexGuideActivity extends BaseActivity implements View.OnClickListen
             type = 2;
         }
         new SPUtils(Constants.SP_NAME).put(Constants.SP_SELECT_SEX, type);
-        startActivity(new Intent(SexGuideActivity.this, MainActivity.class));
+        startActivity(new Intent(SexGuideActivity.this, HomePageActivity.class));
         overridePendingTransition(R.anim.scale_anim_in, R.anim.scale_anim_out);
         finish();
     }
