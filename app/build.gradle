@@ -83,6 +83,8 @@ dependencies {
     compile rootProject.ext.dependencies["androideventbus"]
     compile rootProject.ext.dependencies["constraint-layout"]
     compile rootProject.ext.dependencies["base-recyclerview-adapter-helper"]
+    compile rootProject.ext.dependencies["glide-transformations"]
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
     compile rootProject.ext.dependencies["tkrefreshlayout"]
     compile rootProject.ext.dependencies["umeng-analytics"]
     compile rootProject.ext.dependencies["util-code"]

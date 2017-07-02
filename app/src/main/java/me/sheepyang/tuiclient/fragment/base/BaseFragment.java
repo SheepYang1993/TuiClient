@@ -14,7 +14,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import me.sheepyang.tuiclient.app.APP;
+import me.sheepyang.tuiclient.app.TApp;
 
 /**
  * Created by Administrator on 2017/4/19.
@@ -24,13 +24,13 @@ public abstract class BaseFragment extends Fragment {
     public Unbinder unbinder;
     public View mRootView;
     public Context mContext;
-    public APP mApp;
+    public TApp mTApp;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-        mApp = (APP) ((Activity) context).getApplication();
+        mTApp = (TApp) ((Activity) context).getApplication();
     }
 
     @Override

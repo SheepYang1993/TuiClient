@@ -12,6 +12,7 @@ import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.footer.LoadingView;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import cn.bmob.v3.listener.FindListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.adapter.SortAdapter;
+import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.model.bmobentity.ImageTypeEntity;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
@@ -100,23 +102,18 @@ public class SortFragment extends BaseLazyFragment {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
-                getTypeData(true, refreshLayout);
+                getTypeData(0, refreshLayout);
             }
 
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
-                getTypeData(false, refreshLayout);
+                getTypeData(1, refreshLayout);
             }
         });
     }
 
-    private void getTypeData(final boolean isPullRefresh, TwinklingRefreshLayout refreshLayout) {
-        if (isPullRefresh) {//下拉刷新
-            mCurrentPage = 1;
-        } else {//加载更多
-            mCurrentPage++;
-        }
+    private void getTypeData(int type, TwinklingRefreshLayout refreshLayout) {
         BmobQuery<ImageTypeEntity> query = new BmobQuery<ImageTypeEntity>();
         //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(mPageSize);
@@ -135,6 +132,7 @@ public class SortFragment extends BaseLazyFragment {
             public void done(List<ImageTypeEntity> object, BmobException e) {
                 if (e == null) {
                     if (object != null && object.size() > 0) {
+                        KLog.i(Constants.TAG, object.size());
                         switch (type) {
                             case 0://下拉刷新
                                 mDatas = object;
@@ -188,7 +186,7 @@ public class SortFragment extends BaseLazyFragment {
 
     @Override
     protected void initData() {
-        getTypeData(true, mRefreshLayout);
+        getTypeData(0, mRefreshLayout);
     }
 
     private void initView() {
