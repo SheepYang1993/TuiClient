@@ -9,6 +9,7 @@ import cn.bmob.v3.datatype.BmobFile;
 
 public class ImageTypeEntity extends BmobObject {
     private String name;//分类名称
+    private Integer habit;//喜好 0全部；1男生；2女生
     private Integer num;//该分类照片数量
     private BmobFile pic;//封面
 
@@ -26,6 +27,14 @@ public class ImageTypeEntity extends BmobObject {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+
+    public Integer getHabit() {
+        return habit;
+    }
+
+    public void setHabit(Integer habit) {
+        this.habit = habit;
     }
 
     public BmobFile getPic() {
