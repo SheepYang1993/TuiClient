@@ -8,7 +8,6 @@ import android.view.View;
 import com.blankj.utilcode.util.EncryptUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.RegexUtils;
-import com.socks.library.KLog;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -18,7 +17,6 @@ import cn.bmob.v3.listener.LogInListener;
 import me.sheepyang.tuiclient.BuildConfig;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
-import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.model.bmobentity.UserEntity;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.widget.ClearEditText;
@@ -79,6 +77,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             showMessage("请输入密码");
             return;
         }
+        if (mEdtPassword.getText().toString().trim().length() < 6) {
+            showMessage("密码不能少于6位");
+            return;
+        }
         String password = EncryptUtils.encryptMD5ToString(mEdtPassword.getText().toString().trim()).toLowerCase();
         showDialog("正在登陆...");
         BmobUser.loginByAccount(mEdtPhone.getText().toString().trim(), password, new LogInListener<UserEntity>() {
@@ -87,10 +89,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void done(UserEntity user, BmobException e) {
                 closeDialog();
                 if (e != null) {
-                    if (user != null) {
-                        KLog.i(Constants.TAG, "用户登陆成功");
+                    UserEntity myUser = BmobUser.getCurrentUser(UserEntity.class);
+                    if (myUser != null) {
+                        showMessage("登陆成功");
+                        setResult(RESULT_OK);
+                        onBackPressed();
                     } else {
-                        showMessage("用户不存在");
+                        showMessage("登陆失败，账号或密码错误");
                     }
                 } else {
                     BmobExceptionUtil.handler(e);

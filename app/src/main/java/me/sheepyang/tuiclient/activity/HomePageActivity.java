@@ -109,6 +109,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.iv_mine:
                 showMessage("我的");
+                AppUtil.logout();
 //                startActivity(new Intent(mActivity, MineActivity.class));
                 break;
             case R.id.iv_search:

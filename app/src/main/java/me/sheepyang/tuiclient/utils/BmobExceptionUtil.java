@@ -11,7 +11,15 @@ import cn.bmob.v3.exception.BmobException;
 
 public class BmobExceptionUtil {
     public static void handler(BmobException e) {
-        KLog.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-        ToastUtils.showShortToast("失败：" + e.getMessage() + "," + e.getErrorCode());
+        switch (e.getErrorCode()) {
+            case 207://验证码错误
+                KLog.i("bmob", "207,验证码错误");
+                ToastUtils.showShortToast("验证码错误");
+                break;
+            default:
+                KLog.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                ToastUtils.showShortToast("失败：" + e.getMessage() + "," + e.getErrorCode());
+                break;
+        }
     }
 }

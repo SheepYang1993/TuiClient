@@ -1,6 +1,8 @@
 package me.sheepyang.tuiclient.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +33,8 @@ import me.sheepyang.tuiclient.utils.AppUtil;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.widget.dialog.QDialog;
 import me.sheepyang.tuiclient.widget.recyclerview.NoAlphaItemAnimator;
+
+import static me.sheepyang.tuiclient.utils.AppUtil.TO_LOGIN;
 
 /**
  * 分类
@@ -221,5 +225,19 @@ public class SortFragment extends BaseLazyFragment {
         mHintDialog = new QDialog(mContext);
         mHintDialog.setTitle("开通会员");
         mHintDialog.setMessage("现在开通会员，即可解锁所有照片，并可获取模特联系方式哦~");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case TO_LOGIN:
+                if (resultCode == Activity.RESULT_OK) {
+                    mRefreshLayout.startRefresh();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
