@@ -1,5 +1,7 @@
 package me.sheepyang.tuiclient.model.bmobentity;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -7,7 +9,7 @@ import cn.bmob.v3.datatype.BmobFile;
  * Created by SheepYang on 2017-07-03.
  */
 
-public class UserEntity extends BmobUser {
+public class UserEntity extends BmobUser implements Serializable {
     private Integer habit;//喜好 0全部；1男生；2女生
     private Integer level;//账号级别 0普通用户；1管理员；2模特；3VIP
     private Boolean isVip;//是否是VIP，level==2
