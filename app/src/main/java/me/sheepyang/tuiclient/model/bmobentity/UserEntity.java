@@ -13,8 +13,17 @@ public class UserEntity extends BmobUser implements Serializable {
     private Integer habit;//喜好 0全部；1男生；2女生
     private Integer level;//账号级别 0普通用户；1管理员；2模特；3VIP
     private Boolean isVip;//是否是VIP，level==2
+    private Integer sex;//性别 1男；2女；
     private String nick;//昵称
     private BmobFile avatar;//头像
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
 
     public Integer getHabit() {
         return habit;
