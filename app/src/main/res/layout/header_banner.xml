@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.youth.banner.Banner xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/banner"
+    android:layout_width="match_parent"
+    app:indicator_drawable_selected="@drawable/pink_radius"
+    app:indicator_drawable_unselected="@drawable/gray_radius"
+    android:layout_height="match_parent" />

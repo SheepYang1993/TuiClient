@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                              xmlns:tools="http://schemas.android.com/tools"
+                                              android:id="@+id/refresh_layout"
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_gray"
+        android:orientation="vertical"
+        tools:context=".activity.mine.MineActivity">
+
+
+        <me.sheepyang.tuiclient.widget.QBar
+            android:layout_width="match_parent"
+            app:qb_is_back="true"
+            android:layout_height="wrap_content"
+            app:qb_title="我的"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:padding="15dp">
+
+            <ImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/white_radius"
+                android:src="@drawable/ico_user_avatar"/>
+
+            <TextView
+                android:id="@+id/tv_nick_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_avatar"
+                android:hint="昵称未设置"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_edit_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_white_btn"
+                android:text="编辑"
+                android:textColor="@color/white"
+                android:textSize="17sp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_open_vip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ico_vip"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="开通VIP"
+                    android:textSize="15sp"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="@dimen/split_line_height"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/split_line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_collection"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ico_heart_selected"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="我的收藏"
+                    android:textSize="15sp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/split_line_height"
+            android:background="@color/split_line"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="25dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/split_line_height"
+                    android:background="@color/split_line"/>
+
+                <TextView
+                    android:id="@+id/tv_clear_memory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="15dp"
+                    android:text="清空缓存"
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/split_line_height"
+                    android:background="@color/split_line"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tv_select_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:drawableRight="@drawable/ico_arrow_right"
+                    android:gravity="center_vertical"
+                    android:padding="15dp"
+                    android:text="选择喜好"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/split_line_height"
+                    android:background="@color/split_line"/>
+
+                <TextView
+                    android:id="@+id/tv_feed_back"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="15dp"
+                    android:text="意见反馈"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/split_line_height"
+                    android:background="@color/split_line"/>
+
+                <TextView
+                    android:id="@+id/tv_check_update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="15dp"
+                    android:text="检查更新"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/split_line_height"
+                    android:background="@color/split_line"/>
+
+                <TextView
+                    android:id="@+id/tv_user_agreement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="15dp"
+                    android:text="用户协议"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/split_line_height"
+                    android:background="@color/split_line"/>
+
+                <TextView
+                    android:id="@+id/tv_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="15dp"
+                    android:text="关于我们"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/split_line_height"
+                    android:background="@color/split_line"/>
+            </LinearLayout>
+        </ScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/split_line_height"
+            android:background="@color/split_line"/>
+
+        <TextView
+            android:id="@+id/tv_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="退出登录"
+            android:textColor="@color/colorAccent"
+            android:textSize="17sp"/>
+    </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

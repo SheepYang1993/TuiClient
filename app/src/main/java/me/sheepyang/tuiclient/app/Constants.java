@@ -8,6 +8,7 @@ public class Constants {
     public static final String BMOB_APP_ID = "9dbbc141661fce75055cd43eec71d8f4";
     public static final String TAG = "SheepYang";
     public static final String IMAGE_FILE_PATH = "/TuiServer";
+    public static final int PAGE_SIZE = 10;
 
 
     public static final String SP_NAME = "TuiClient";

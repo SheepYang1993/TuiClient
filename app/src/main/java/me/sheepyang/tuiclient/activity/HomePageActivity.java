@@ -17,8 +17,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
+import me.sheepyang.tuiclient.activity.mine.MineActivity;
 import me.sheepyang.tuiclient.adapter.HomePageAdapter;
 import me.sheepyang.tuiclient.fragment.SortFragment;
+import me.sheepyang.tuiclient.fragment.modellist.NewestFragment;
 import me.sheepyang.tuiclient.model.entity.TabEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
 
@@ -79,8 +81,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         mTitleList.add("最新");
         mTitleList.add("分类");
         mTitleList.add("最热");
-//        mFragmentList.add(NewestFragment.newInstance(true, true));
-        mFragmentList.add(SortFragment.newInstance("分类"));
+        mFragmentList.add(NewestFragment.newInstance(true, true));
         mFragmentList.add(SortFragment.newInstance("分类"));
         mFragmentList.add(SortFragment.newInstance("分类"));
 //        mFragmentList.add(HottestFragment.newInstance(true));
@@ -108,9 +109,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_mine:
-                showMessage("我的");
-                AppUtil.logout();
-//                startActivity(new Intent(mActivity, MineActivity.class));
+                startActivity(new Intent(mActivity, MineActivity.class));
                 break;
             case R.id.iv_search:
                 showMessage("搜索");

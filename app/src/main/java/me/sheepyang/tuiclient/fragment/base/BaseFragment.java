@@ -55,7 +55,7 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract void init();
 
-    public void showToast(String msg) {
+    public void showMessage(String msg) {
         ToastUtils.showShortToast(msg);
     }
 

@@ -88,7 +88,7 @@ public class SortFragment extends BaseLazyFragment {
         mHintDialog.setOnRightClickListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                showToast("购买vip");
+                showMessage("购买vip");
 //                startActivity(new Intent(mContext, BuyVIPActivity.class));
             }
         });
@@ -99,13 +99,13 @@ public class SortFragment extends BaseLazyFragment {
                 if (item.getVip()) {
                     if (AppUtil.isUserLogin(mContext, true)) {
                         if (AppUtil.isUserVip()) {
-                            showToast("模特列表");
+                            showMessage("模特列表");
                         } else {
                             mHintDialog.show();
                         }
                     }
                 } else {
-                    showToast("模特列表");
+                    showMessage("模特列表");
 //                Intent intent = new Intent(mContext, ModelListActivity.class);
 //                intent.putExtra("id", mDatas.get(position).getId());
 //                startActivity(intent);
@@ -164,10 +164,10 @@ public class SortFragment extends BaseLazyFragment {
                             case 0://下拉刷新
                                 mDatas.clear();
                                 mAdapter.setNewData(mDatas);
-                                showToast(getString(R.string.no_data));
+                                showMessage(getString(R.string.no_data));
                                 break;
                             case 1://上拉加载更多
-                                showToast(getString(R.string.no_more_data));
+                                showMessage(getString(R.string.no_more_data));
                                 break;
                         }
                     }
