@@ -64,6 +64,15 @@
         <activity
             android:name=".activity.HomePageActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.login.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.login.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.login.ForgotPasswordActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -27,11 +27,10 @@ import me.sheepyang.tuiclient.adapter.SortAdapter;
 import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.model.bmobentity.ImageTypeEntity;
+import me.sheepyang.tuiclient.utils.AppUtil;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.widget.dialog.QDialog;
 import me.sheepyang.tuiclient.widget.recyclerview.NoAlphaItemAnimator;
-
-import static android.R.attr.type;
 
 /**
  * 分类
@@ -92,10 +91,21 @@ public class SortFragment extends BaseLazyFragment {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                showToast("模特列表");
+                ImageTypeEntity item = (ImageTypeEntity) adapter.getData().get(position);
+                if (item.getVip()) {
+                    if (AppUtil.isUserLogin(mContext, true)) {
+                        if (AppUtil.isUserVip()) {
+                            showToast("模特列表");
+                        } else {
+                            mHintDialog.show();
+                        }
+                    }
+                } else {
+                    showToast("模特列表");
 //                Intent intent = new Intent(mContext, ModelListActivity.class);
 //                intent.putExtra("id", mDatas.get(position).getId());
 //                startActivity(intent);
+                }
             }
         });
         mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
@@ -115,6 +125,7 @@ public class SortFragment extends BaseLazyFragment {
 
     private void getTypeData(int type, TwinklingRefreshLayout refreshLayout) {
         BmobQuery<ImageTypeEntity> query = new BmobQuery<ImageTypeEntity>();
+        query.addWhereEqualTo("isShow", Boolean.TRUE);
         //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(mPageSize);
         switch (type) {
@@ -123,7 +134,8 @@ public class SortFragment extends BaseLazyFragment {
                 break;
         }
         query.setSkip(mCurrentPage * mPageSize);
-        query.order("-updatedAt");
+//        query.order("-updatedAt");
+        query.order("-createdAt");
         ((BaseActivity) mContext).showDialog("玩命加载中...");
         //执行查询方法
         query.findObjects(new FindListener<ImageTypeEntity>() {

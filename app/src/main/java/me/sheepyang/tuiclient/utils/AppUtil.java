@@ -1,10 +1,15 @@
 package me.sheepyang.tuiclient.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+
+import com.socks.library.KLog;
 
 import cn.bmob.v3.Bmob;
-
-import static cn.bmob.v3.Bmob.getApplicationContext;
+import cn.bmob.v3.BmobUser;
+import me.sheepyang.tuiclient.activity.login.LoginActivity;
+import me.sheepyang.tuiclient.model.bmobentity.UserEntity;
 
 
 /**
@@ -12,6 +17,7 @@ import static cn.bmob.v3.Bmob.getApplicationContext;
  */
 
 public class AppUtil {
+    public static final int TO_LOGIN = 0x0123;
 
     public static void initBmob(Context context, String appkey, String channel) {
         Bmob.initialize(context, appkey, channel);
@@ -31,5 +37,21 @@ public class AppUtil {
 
     public static void exit(Context context) {
         AppManager.getAppManager().AppExit(context.getApplicationContext());
+    }
+
+    public static Boolean isUserVip() {
+        UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
+        return user != null && user.getVip() != null && user.getVip();
+    }
+
+    public static Boolean isUserLogin(Context context, boolean isToLogin) {
+        UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
+        if (user == null && isToLogin) {
+            KLog.i();
+            if (context instanceof Activity) {
+                ((Activity) context).startActivityForResult(new Intent(context, LoginActivity.class), TO_LOGIN);
+            }
+        }
+        return user != null;
     }
 }
