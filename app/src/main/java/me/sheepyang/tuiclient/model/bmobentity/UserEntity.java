@@ -34,7 +34,6 @@ public class UserEntity extends BmobUser {
         return level;
     }
 
-
     public void setLevel(Integer level) {
         this.level = level;
         setVip(level != null && (level == 1 || level >= 3));
