@@ -20,6 +20,7 @@ import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.activity.mine.MineActivity;
 import me.sheepyang.tuiclient.adapter.HomePageAdapter;
 import me.sheepyang.tuiclient.fragment.SortFragment;
+import me.sheepyang.tuiclient.fragment.modellist.HottestFragment;
 import me.sheepyang.tuiclient.fragment.modellist.NewestFragment;
 import me.sheepyang.tuiclient.model.entity.TabEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
@@ -83,8 +84,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         mTitleList.add("最热");
         mFragmentList.add(NewestFragment.newInstance(true, true));
         mFragmentList.add(SortFragment.newInstance("分类"));
-        mFragmentList.add(SortFragment.newInstance("分类"));
-//        mFragmentList.add(HottestFragment.newInstance(true));
+        mFragmentList.add(HottestFragment.newInstance(true));
         mTabEntities.add(new TabEntity("最新", 0, 0));
         mTabEntities.add(new TabEntity("分类", 0, 0));
         mTabEntities.add(new TabEntity("最热", 0, 0));

@@ -19,6 +19,7 @@ import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.footer.LoadingView;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
+import com.socks.library.KLog;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -30,11 +31,12 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
-import me.sheepyang.tuiclient.adapter.PhotoPackageAdapter;
+import me.sheepyang.tuiclient.adapter.PhotoBagAdapter;
 import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.loader.GlideImageLoader;
 import me.sheepyang.tuiclient.model.bmobentity.AdvEntity;
+import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.widget.recyclerview.NoAlphaItemAnimator;
@@ -53,8 +55,8 @@ public class NewestFragment extends BaseLazyFragment {
     RecyclerView mRecyclerView;
     @BindView(R.id.refresh_layout)
     TwinklingRefreshLayout mRefreshLayout;
-    private PhotoPackageAdapter mAdapter;
-    private List<String> mData = new ArrayList<>();
+    private PhotoBagAdapter mAdapter;
+    private List<PhotoBagEntity> mData = new ArrayList<>();
     private SinaRefreshView mHeadView;
     private Banner mBannar;
     private List<AdvEntity> mBannerList = new ArrayList<>();
@@ -118,65 +120,62 @@ public class NewestFragment extends BaseLazyFragment {
         } else {//加载更多
             mCurrentPage++;
         }
-//        OkGo.post(Api.GET_MODEL_LIST_NEWEST)
-//                .tag(this)
-//                .params("page", mCurrentPage)
-//                .params("rows", mPageSize)
-//                .params("e.userlike", new SPUtils(QContacts.SP_NAME).getInt(SPContants.SELECT_SEX, 0))
-//                .params("e.id", mTypeId)
-//                .params("e.modelid", mModelId)
-//                .execute(new JsonCallback<ModelListResponse>() {
-//
-//                    @Override
-//                    public void onSuccess(ModelListResponse imageTypeResponse, Call call, Response response) {
-//                        if (imageTypeResponse != null && imageTypeResponse.isTrue(mContext)) {
-//                            if (imageTypeResponse.getData().getRows() != null && imageTypeResponse.getData().getRows().size() > 0) {
-//                                if (isPullRefresh) {//下拉刷新
-//                                    mData = imageTypeResponse.getData().getRows();
-//                                    mAdapter.updata(mData);
-//                                } else {//加载更多
-//                                    mData.addAll(imageTypeResponse.getData().getRows());
-//                                    mAdapter.updata(mData);
-//                                }
-//                            } else {
-//                                if (isPullRefresh) {//下拉刷新
-//                                    mData.clear();
-//                                    mAdapter.updata(mData);
-//                                    mAdapter.setEmptyView(mEmptyView);
-//                                    showMessage(getString(R.string.no_data));
-//                                } else {//加载更多
-//                                    mCurrentPage--;
-//                                    showMessage(getString(R.string.no_more_data));
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onAfter(ModelListResponse imageTypeResponse, Exception e) {
-//                        super.onAfter(imageTypeResponse, e);
-//                        if (isPullRefresh) {//下拉刷新
-//                            mRefreshLayout.finishRefreshing();
-//                        } else {//加载更多
-//                            mRefreshLayout.finishLoadmore();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Call call, Response response, Exception e) {
-//                        super.onError(call, response, e);
-//                        if (isPullRefresh) {//下拉刷新
-//                            mCurrentPage = 1;
-//                        } else {//加载更多
-//                            mCurrentPage--;
-//                        }
-//                        ExceptionUtil.handleException(mContext, response, e);
-//                    }
-//                });
+        BmobQuery<PhotoBagEntity> query = new BmobQuery<PhotoBagEntity>();
+        //返回50条数据，如果不加上这条语句，默认返回10条数据
+        query.setLimit(mPageSize);
+        if (isPullRefresh) {//下拉刷新
+            mCurrentPage = 0;
+        }
+        query.setSkip(mCurrentPage * mPageSize);
+        query.include("model");
+        // 多个排序字段可以用（，）号分隔
+        query.order("-createdAt,-updatedAt,collectedNum,seeNum");
+        ((BaseActivity) mContext).showDialog("加载模特套图...");
+        //执行查询方法
+        query.findObjects(new FindListener<PhotoBagEntity>() {
+
+            @Override
+            public void done(List<PhotoBagEntity> object, BmobException e) {
+                KLog.i();
+                if (e == null) {
+                    KLog.i();
+                    if (object != null && object.size() > 0) {
+                        KLog.i();
+                        if (isPullRefresh) {//下拉刷新
+                            mData = object;
+                        } else {//上拉加载更多
+                            mData.addAll(object);
+                        }
+                        mAdapter.setNewData(mData);
+                        mCurrentPage++;
+                    } else {
+                        KLog.i();
+                        if (isPullRefresh) {//下拉刷新
+                            mData.clear();
+                            mAdapter.setNewData(mData);
+                            showMessage(getString(R.string.no_data));
+                        } else {//上拉加载更多
+                            showMessage(getString(R.string.no_more_data));
+                        }
+                    }
+                } else {
+                    KLog.i();
+                    ((BaseActivity) mContext).closeDialog();
+                    BmobExceptionUtil.handler(e);
+                }
+
+                KLog.i();
+                ((BaseActivity) mContext).closeDialog();
+                if (isPullRefresh) {//下拉刷新
+                    mRefreshLayout.finishRefreshing();
+                } else {//上拉加载更多
+                    mRefreshLayout.finishLoadmore();
+                }
+            }
+        });
     }
 
     private void getBannerList() {
-
         BmobQuery<AdvEntity> query = new BmobQuery<AdvEntity>();
         //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(100);
@@ -257,7 +256,7 @@ public class NewestFragment extends BaseLazyFragment {
         mRefreshLayout.setHeaderView(mHeadView);
         mRefreshLayout.setBottomView(new LoadingView(mContext));
 
-        mAdapter = new PhotoPackageAdapter(mData);
+        mAdapter = new PhotoBagAdapter(mData);
         mAdapter.isFirstOnly(true);
 //        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
 
