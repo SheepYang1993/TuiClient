@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.adapter.PhotoBagAdapter;
@@ -37,6 +41,7 @@ import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.loader.GlideImageLoader;
 import me.sheepyang.tuiclient.model.bmobentity.AdvEntity;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
+import me.sheepyang.tuiclient.model.bmobentity.UserEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.widget.recyclerview.NoAlphaItemAnimator;
@@ -127,7 +132,7 @@ public class NewestFragment extends BaseLazyFragment {
             mCurrentPage = 0;
         }
         query.setSkip(mCurrentPage * mPageSize);
-        query.include("model");
+        query.include("model,collector");
         // 多个排序字段可以用（，）号分隔
         query.order("-createdAt,-updatedAt,collectedNum,seeNum");
         ((BaseActivity) mContext).showDialog("加载模特套图...");
@@ -302,6 +307,8 @@ public class NewestFragment extends BaseLazyFragment {
                 case R.id.ll_collection:
                     if (AppUtil.isUserLogin(mContext, true)) {
                         view.setEnabled(false);
+                        KLog.i(Constants.TAG, mData.get(position).getCollector().getObjects());
+                        toCollectPhotoBag(view, mData.get(position));
 //                        if ("1".equals(mData.get(position).getSfsc())) {//已收藏
 //                            cancelCollectImages(view, position);
 //                        } else {//未收藏
@@ -335,6 +342,28 @@ public class NewestFragment extends BaseLazyFragment {
                 super.onLoadMore(refreshLayout);
                 getModelList(false);
             }
+        });
+    }
+
+    private void toCollectPhotoBag(View view, PhotoBagEntity photoBagEntity) {
+        UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
+        //将当前用户添加到Post表中的likes字段值中，表明当前用户喜欢该帖子
+        BmobRelation relation = new BmobRelation();
+        //将当前用户添加到多对多关联中
+        relation.add(user);
+        //多对多关联指向`post`的`likes`字段
+        photoBagEntity.setCollector(relation);
+        photoBagEntity.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                view.setEnabled(true);
+                if (e == null) {
+                    Log.i("bmob", "多对多关联添加成功");
+                } else {
+                    Log.i("bmob", "失败：" + e.getMessage());
+                }
+            }
+
         });
     }
 

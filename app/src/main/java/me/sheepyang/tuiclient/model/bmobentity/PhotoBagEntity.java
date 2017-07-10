@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * Created by SheepYang on 2017-07-03.
@@ -24,6 +25,15 @@ public class PhotoBagEntity extends BmobObject implements Serializable {
     private Boolean isShow;//是否展示
     private BmobFile coverPic;//封面
     private Integer photoNum;//套图照片数量
+    private BmobRelation collector;//收藏该套图的用户
+
+    public BmobRelation getCollector() {
+        return collector;
+    }
+
+    public void setCollector(BmobRelation collector) {
+        this.collector = collector;
+    }
 
     public Integer getCollectedNum() {
         return collectedNum;
