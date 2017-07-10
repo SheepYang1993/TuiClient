@@ -54,6 +54,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
             getUserInfo();
         } else {
             mTvNickName.setText("未登录");
+            mTvLogout.setText("立即登录");
         }
     }
 
@@ -95,11 +96,16 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
 
     private void initView() {
         mRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        mRefreshLayout.setEnabled(AppUtil.isUserLogin(mActivity, false));
 
         mHintDialog = new QDialog(mActivity);
         mHintDialog.setTitle("退出当前账号？");
         mHintDialog.setMessage("退出后将不能享受更多服务哦~");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mRefreshLayout.setEnabled(AppUtil.isUserLogin(mActivity, false));
     }
 
     @Override

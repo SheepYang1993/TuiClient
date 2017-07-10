@@ -28,7 +28,7 @@ import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.adapter.SortAdapter;
 import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
-import me.sheepyang.tuiclient.model.bmobentity.ImageTypeEntity;
+import me.sheepyang.tuiclient.model.bmobentity.SortEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.widget.dialog.QDialog;
@@ -47,7 +47,7 @@ public class SortFragment extends BaseLazyFragment {
     TwinklingRefreshLayout mRefreshLayout;
     //    private String mParam1;
     private SortAdapter mAdapter;
-    private List<ImageTypeEntity> mDatas = new ArrayList<>();
+    private List<SortEntity> mDatas = new ArrayList<>();
     private SinaRefreshView mHeadView;
     private QDialog mHintDialog;
     private int mCurrentPage = 1;
@@ -95,7 +95,7 @@ public class SortFragment extends BaseLazyFragment {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                ImageTypeEntity item = (ImageTypeEntity) adapter.getData().get(position);
+                SortEntity item = (SortEntity) adapter.getData().get(position);
                 if (item.getVip()) {
                     if (AppUtil.isUserLogin(mContext, true)) {
                         if (AppUtil.isUserVip()) {
@@ -128,7 +128,7 @@ public class SortFragment extends BaseLazyFragment {
     }
 
     private void getTypeData(int type, TwinklingRefreshLayout refreshLayout) {
-        BmobQuery<ImageTypeEntity> query = new BmobQuery<ImageTypeEntity>();
+        BmobQuery<SortEntity> query = new BmobQuery<SortEntity>();
         query.addWhereEqualTo("isShow", Boolean.TRUE);
         //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(mPageSize);
@@ -142,10 +142,10 @@ public class SortFragment extends BaseLazyFragment {
         query.order("-createdAt");
         ((BaseActivity) mContext).showDialog("玩命加载中...");
         //执行查询方法
-        query.findObjects(new FindListener<ImageTypeEntity>() {
+        query.findObjects(new FindListener<SortEntity>() {
 
             @Override
-            public void done(List<ImageTypeEntity> object, BmobException e) {
+            public void done(List<SortEntity> object, BmobException e) {
                 if (e == null) {
                     if (object != null && object.size() > 0) {
                         KLog.i(Constants.TAG, object.size());

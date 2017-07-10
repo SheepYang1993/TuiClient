@@ -6,19 +6,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.blankj.utilcode.util.ScreenUtils;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import me.sheepyang.tuiclient.R;
-import me.sheepyang.tuiclient.app.TApp;
-import me.sheepyang.tuiclient.model.bmobentity.ImageTypeEntity;
+import me.sheepyang.tuiclient.model.bmobentity.SortEntity;
 import me.sheepyang.tuiclient.utils.GlideApp;
 import me.sheepyang.tuiclient.utils.transformation.MyBlurTransformation;
 
@@ -26,17 +22,17 @@ import me.sheepyang.tuiclient.utils.transformation.MyBlurTransformation;
  * Created by Administrator on 2017/4/19.
  */
 
-public class SortAdapter extends BaseQuickAdapter<ImageTypeEntity, BaseViewHolder> {
+public class SortAdapter extends BaseQuickAdapter<SortEntity, BaseViewHolder> {
     private int mScreenWidth;
     private MultiTransformation transformation;
 
-    public SortAdapter(List<ImageTypeEntity> data) {
+    public SortAdapter(List<SortEntity> data) {
         super(R.layout.item_sort, data);
         mScreenWidth = ScreenUtils.getScreenWidth();
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, ImageTypeEntity item) {
+    protected void convert(BaseViewHolder helper, SortEntity item) {
         ViewGroup.LayoutParams lp = helper.getView(R.id.iv_photo).getLayoutParams();
         lp.width = mScreenWidth / 2;
         lp.height = (int) (lp.width * 0.75);

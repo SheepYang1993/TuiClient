@@ -8,6 +8,7 @@ import android.view.View;
 import com.blankj.utilcode.util.EncryptUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.RegexUtils;
+import com.socks.library.KLog;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -87,17 +88,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void done(UserEntity user, BmobException e) {
+                KLog.i();
                 closeDialog();
-                if (e != null) {
+                if (e == null) {
+                    KLog.i();
                     UserEntity myUser = BmobUser.getCurrentUser(UserEntity.class);
                     if (myUser != null) {
+                        KLog.i();
                         showMessage("登陆成功");
                         setResult(RESULT_OK);
                         onBackPressed();
                     } else {
+                        KLog.i();
                         showMessage("登陆失败，账号或密码错误");
                     }
+                    KLog.i();
                 } else {
+                    KLog.i();
                     BmobExceptionUtil.handler(e);
                 }
             }
