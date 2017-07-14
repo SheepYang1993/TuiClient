@@ -18,11 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.adapter.PhotoDetailAdapter;
+import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoDetailEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
+import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.widget.QBar;
 import me.sheepyang.tuiclient.widget.dialog.QDialog;
 import me.sheepyang.tuiclient.widget.recyclerview.NoAlphaItemAnimator;
@@ -62,7 +67,7 @@ public class PhotoDetailActivity extends BaseActivity {
         }
         initView();
         initListener();
-        getModelList(true);
+        getModelList(0, mRefreshLayout);
     }
 
     private void initView() {
@@ -132,76 +137,76 @@ public class PhotoDetailActivity extends BaseActivity {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
-                getModelList(true);
+                getModelList(0, mRefreshLayout);
             }
 
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
-                getModelList(false);
+                getModelList(1, mRefreshLayout);
             }
         });
     }
 
-    private void getModelList(final boolean isPullRefresh) {
-        if (isPullRefresh) {//下拉刷新
-            mCurrentPage = 1;
-        } else {//加载更多
-            mCurrentPage++;
+    private void getModelList(int type, TwinklingRefreshLayout refreshLayout) {
+        BmobQuery<PhotoDetailEntity> query = new BmobQuery<PhotoDetailEntity>();
+        //返回50条数据，如果不加上这条语句，默认返回10条数据
+        query.setLimit(mPageSize);
+        switch (type) {
+            case 0://下拉刷新
+                mCurrentPage = 0;
+                break;
         }
-//        OkGo.post(Api.MODEL_IMG_DETAL)
-//                .tag(this)
-//                .params("page", mCurrentPage)
-//                .params("rows", mPageSize)
-//                .params("e.id", mId)
-//                .execute(new JsonCallback<ModelPhotoListResponse>() {
-//
-//                    @Override
-//                    public void onSuccess(ModelPhotoListResponse imageTypeResponse, Call call, Response response) {
-//                        if (imageTypeResponse != null && imageTypeResponse.isTrue(mContext)) {
-//                            if (imageTypeResponse.getData().getRows() != null && imageTypeResponse.getData().getRows().size() > 0) {
-//                                mAdapter.setSeeCount(imageTypeResponse.getData().getSeecount());
-//                                if (isPullRefresh) {//下拉刷新
-//                                    mData = imageTypeResponse.getData().getRows();
-//                                    mAdapter.setNewData(mData);
-//                                } else {//加载更多
-//                                    mData.addAll(imageTypeResponse.getData().getRows());
-//                                    mAdapter.setNewData(mData);
-//                                }
-//                            } else {
-//                                if (isPullRefresh) {//下拉刷新
-//                                    mData.clear();
-//                                    mAdapter.setNewData(mData);
-//                                    mAdapter.setEmptyView(mEmptyView);
-//                                    showToast(getString(R.string.no_data));
-//                                } else {//加载更多
-//                                    mCurrentPage--;
-//                                    showToast(getString(R.string.no_more_data));
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onAfter(ModelPhotoListResponse imageTypeResponse, Exception e) {
-//                        super.onAfter(imageTypeResponse, e);
-//                        if (isPullRefresh) {//下拉刷新
-//                            mRefreshLayout.finishRefreshing();
-//                        } else {//加载更多
-//                            mRefreshLayout.finishLoadmore();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Call call, Response response, Exception e) {
-//                        super.onError(call, response, e);
-//                        ExceptionUtil.handleException(mContext, response, e);
-//                        if (isPullRefresh) {//下拉刷新
-//                            mCurrentPage = 1;
-//                        } else {//加载更多
-//                            mCurrentPage--;
-//                        }
-//                    }
-//                });
+        PhotoBagEntity photoBag = new PhotoBagEntity();
+        photoBag.setObjectId(mId);
+        query.addWhereEqualTo("photoBag", photoBag);
+        query.setSkip(mCurrentPage * mPageSize);
+//        query.order("-updatedAt");
+        query.order("-createdAt");
+        //执行查询方法
+        query.findObjects(new FindListener<PhotoDetailEntity>() {
+
+            @Override
+            public void done(List<PhotoDetailEntity> object, BmobException e) {
+                if (e == null) {
+                    if (object != null && object.size() > 0) {
+                        switch (type) {
+                            case 0://下拉刷新
+                                mData = object;
+                                break;
+                            case 1://上拉加载更多
+                                mData.addAll(object);
+                                break;
+                        }
+                        mAdapter.setNewData(mData);
+                        mCurrentPage++;
+                    } else {
+                        switch (type) {
+                            case 0://下拉刷新
+                                mData.clear();
+                                mAdapter.setNewData(mData);
+                                showMessage(getString(R.string.no_data));
+                                break;
+                            case 1://上拉加载更多
+                                showMessage(getString(R.string.no_more_data));
+                                break;
+                        }
+                    }
+                } else {
+                    closeDialog();
+                    BmobExceptionUtil.handler(e);
+                }
+
+                closeDialog();
+                switch (type) {
+                    case 0:
+                        refreshLayout.finishRefreshing();
+                        break;
+                    case 1:
+                        refreshLayout.finishLoadmore();
+                        break;
+                }
+            }
+        });
     }
 }
