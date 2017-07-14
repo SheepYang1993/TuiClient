@@ -28,11 +28,13 @@ import java.util.List;
 import butterknife.BindView;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
+import me.sheepyang.tuiclient.activity.photo.PhotoDetailActivity;
 import me.sheepyang.tuiclient.adapter.PhotoBagAdapter;
 import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
@@ -304,7 +306,11 @@ public class NewestFragment extends BaseLazyFragment {
                     break;
                 case R.id.ll_collection:
                     if (AppUtil.isUserLogin(mContext, true)) {
-                        toCollectPhotoBag(view, mData.get(position));
+                        if (view.isSelected()) {
+                            toCancelCollectPhotoBag(view, mData.get(position));
+                        } else {
+                            toCollectPhotoBag(view, mData.get(position));
+                        }
                     }
                     break;
                 default:
@@ -312,10 +318,9 @@ public class NewestFragment extends BaseLazyFragment {
             }
         });
         mAdapter.setOnItemClickListener((BaseQuickAdapter adapter, View view, int position) -> {
-//            Intent intent = new Intent(mContext, ModelPhotoActivity.class);
-//            intent.putExtra("id", mData.get(position).getId());
-//            startActivity(intent);
-            showMessage("套图详情");
+            Intent intent = new Intent(mContext, PhotoDetailActivity.class);
+            intent.putExtra("id", mData.get(position).getObjectId());
+            startActivity(intent);
         });
         mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
@@ -336,6 +341,45 @@ public class NewestFragment extends BaseLazyFragment {
         });
     }
 
+    private void toCancelCollectPhotoBag(View view, PhotoBagEntity photoBagEntity) {
+        ((BaseActivity) mContext).showDialog("正在取消收藏...");
+        view.setEnabled(false);
+        UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
+        if (photoBagEntity.getCollectorIdList().contains(user.getObjectId())) {
+            photoBagEntity.getCollectorIdList().remove(user.getObjectId());
+        }
+        photoBagEntity.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+//                    ((BaseActivity) mContext).setDialogMessage("正在收藏2...");
+                    //将当前用户添加到Post表中的likes字段值中，表明当前用户喜欢该帖子
+                    BmobRelation relation = new BmobRelation();
+                    //将当前用户添加到多对多关联中
+                    relation.remove(user);
+                    //多对多关联指向`post`的`likes`字段
+                    photoBagEntity.setCollector(relation);
+                    photoBagEntity.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            ((BaseActivity) mContext).closeDialog();
+                            view.setEnabled(true);
+                            if (e == null) {
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                BmobExceptionUtil.handler(e);
+                            }
+                        }
+
+                    });
+                } else {
+                    ((BaseActivity) mContext).closeDialog();
+                    BmobExceptionUtil.handler(e);
+                }
+            }
+        });
+    }
+
     /**
      * 收藏套图
      *
@@ -343,43 +387,42 @@ public class NewestFragment extends BaseLazyFragment {
      * @param photoBagEntity
      */
     private void toCollectPhotoBag(View view, PhotoBagEntity photoBagEntity) {
+        ((BaseActivity) mContext).showDialog("正在收藏套图...");
         view.setEnabled(false);
         UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
-        BmobQuery<UserEntity> query = new BmobQuery<UserEntity>();
-        //likes是Post表中的字段，用来存储所有喜欢该帖子的用户
-        query.addWhereRelatedTo("collector", new BmobPointer(photoBagEntity));
-        ((BaseActivity) mContext).showDialog("");
-        query.findObjects(new FindListener<UserEntity>() {
-
+        if (!photoBagEntity.getCollectorIdList().contains(user.getObjectId())) {
+            photoBagEntity.getCollectorIdList().add(user.getObjectId());
+        }
+        photoBagEntity.update(new UpdateListener() {
             @Override
-            public void done(List<UserEntity> object, BmobException e) {
-                ((BaseActivity) mContext).closeDialog();
+            public void done(BmobException e) {
                 if (e == null) {
-                    KLog.i(Constants.TAG, "查询个数：" + object.size());
+//                    ((BaseActivity) mContext).setDialogMessage("正在收藏2...");
+                    //将当前用户添加到Post表中的likes字段值中，表明当前用户喜欢该帖子
+                    BmobRelation relation = new BmobRelation();
+                    //将当前用户添加到多对多关联中
+                    relation.add(user);
+                    //多对多关联指向`post`的`likes`字段
+                    photoBagEntity.setCollector(relation);
+                    photoBagEntity.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            ((BaseActivity) mContext).closeDialog();
+                            view.setEnabled(true);
+                            if (e == null) {
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                BmobExceptionUtil.handler(e);
+                            }
+                        }
+
+                    });
                 } else {
+                    ((BaseActivity) mContext).closeDialog();
                     BmobExceptionUtil.handler(e);
                 }
             }
-
         });
-//        //将当前用户添加到Post表中的likes字段值中，表明当前用户喜欢该帖子
-//        BmobRelation relation = new BmobRelation();
-//        //将当前用户添加到多对多关联中
-//        relation.add(user);
-//        //多对多关联指向`post`的`likes`字段
-//        photoBagEntity.setCollector(relation);
-//        photoBagEntity.update(new UpdateListener() {
-//            @Override
-//            public void done(BmobException e) {
-//                view.setEnabled(true);
-//                if (e == null) {
-//                    Log.i("bmob", "多对多关联添加成功");
-//                } else {
-//                    Log.i("bmob", "失败：" + e.getMessage());
-//                }
-//            }
-//
-//        });
     }
 
     @Override

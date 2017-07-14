@@ -24,7 +24,11 @@ public class BmobExceptionUtil {
                 break;
             case 101://没有找到表
                 KLog.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                ToastUtils.showShortToast("没有查询到数据表，请联系管理员~");
+                if ("username or password incorrect.".equals(e.getMessage())) {
+                    ToastUtils.showShortToast("用户名或密码错误~");
+                } else {
+                    ToastUtils.showShortToast("没有查询到数据表，请联系管理员~");
+                }
                 break;
             case 202://用户名已存在
                 KLog.i("bmob", "202, 用户名已存在");

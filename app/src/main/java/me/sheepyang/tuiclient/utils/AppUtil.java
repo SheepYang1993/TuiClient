@@ -44,6 +44,10 @@ public class AppUtil {
         return user != null && user.getVip() != null && user.getVip();
     }
 
+    public static UserEntity getUser() {
+        return BmobUser.getCurrentUser(UserEntity.class);
+    }
+
     public static Boolean isUserLogin(Context context, boolean isToLogin) {
         UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
         if (user == null && isToLogin) {

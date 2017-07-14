@@ -17,6 +17,7 @@ import java.util.List;
 
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
+import me.sheepyang.tuiclient.utils.AppUtil;
 import me.sheepyang.tuiclient.utils.DateUtil;
 import me.sheepyang.tuiclient.utils.GlideApp;
 
@@ -60,9 +61,13 @@ public class PhotoBagAdapter extends BaseQuickAdapter<PhotoBagEntity, BaseViewHo
         helper.setText(R.id.tv_label, "#" + item.getLabel() + "#");
         helper.setText(R.id.tv_desc, item.getDesc());
         helper.setText(R.id.tv_image_num, item.getPhotoNum() + "");
-        helper.setText(R.id.tv_collection_num, (item.getCollectedBaseNum() + item.getCollectedNum()) + "");
+        helper.setText(R.id.tv_collection_num, (item.getCollectedBaseNum() + item.getCollectorIdList().size()) + "");
         helper.addOnClickListener(R.id.iv_avatar);
         helper.addOnClickListener(R.id.ll_collection);
+
+        if (AppUtil.getUser() != null) {
+            helper.getView(R.id.ll_collection).setSelected(item.getCollectorIdList().contains(AppUtil.getUser().getObjectId()));
+        }
 
         if (item.getModel().getAvatar() != null && !TextUtils.isEmpty(item.getModel().getAvatar().getFileUrl())) {
             GlideApp.with(mContext)

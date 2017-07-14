@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".activity.photo.PhotoDetailActivity">
+
+    <me.sheepyang.qlady.widget.QBar
+        android:id="@+id/q_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:qb_right_background="@drawable/bg_white_small_shape"
+        app:qb_right_drawable="@drawable/ico_lock"
+        app:qb_right_text="解锁"
+        app:qb_right_text_size="12sp"
+        app:qb_title="照片详情">
+
+    </me.sheepyang.qlady.widget.QBar>
+
+    <include layout="@layout/layout_refresh_rv"/>
+</LinearLayout>

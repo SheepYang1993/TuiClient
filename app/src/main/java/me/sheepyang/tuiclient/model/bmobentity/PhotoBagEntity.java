@@ -1,6 +1,8 @@
 package me.sheepyang.tuiclient.model.bmobentity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
@@ -18,7 +20,6 @@ public class PhotoBagEntity extends BmobObject implements Serializable {
     private String label;//标签
     private Integer collectedBaseNum;//收藏基数
     private Integer seeBaseNum;//浏览基数
-    private Integer collectedNum;//收藏数
     private Integer seeNum;//浏览数
     private Boolean isBlur;//是否模糊
     private Boolean isVip;//是否VIP
@@ -26,6 +27,24 @@ public class PhotoBagEntity extends BmobObject implements Serializable {
     private BmobFile coverPic;//封面
     private Integer photoNum;//套图照片数量
     private BmobRelation collector;//收藏该套图的用户
+    private SortEntity sort;//分类
+    private List<String> collectorIdList = new ArrayList<>();
+
+    public SortEntity getSort() {
+        return sort;
+    }
+
+    public void setSort(SortEntity sort) {
+        this.sort = sort;
+    }
+
+    public List<String> getCollectorIdList() {
+        return collectorIdList;
+    }
+
+    public void setCollectorIdList(List<String> collectorIdList) {
+        this.collectorIdList = collectorIdList;
+    }
 
     public BmobRelation getCollector() {
         return collector;
@@ -33,14 +52,6 @@ public class PhotoBagEntity extends BmobObject implements Serializable {
 
     public void setCollector(BmobRelation collector) {
         this.collector = collector;
-    }
-
-    public Integer getCollectedNum() {
-        return collectedNum;
-    }
-
-    public void setCollectedNum(Integer collectedNum) {
-        this.collectedNum = collectedNum;
     }
 
     public Integer getSeeNum() {

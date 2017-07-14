@@ -42,6 +42,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         mDialog.show();
     }
 
+    public void setDialogMessage(String msg) {
+        if (mDialog != null) {
+            mDialog.setMessage(msg);
+        }
+    }
+
     public void closeDialog() {
         mDialog.close();
     }
