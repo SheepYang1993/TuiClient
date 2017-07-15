@@ -67,6 +67,8 @@ public class PhotoBagAdapter extends BaseQuickAdapter<PhotoBagEntity, BaseViewHo
 
         if (AppUtil.getUser() != null) {
             helper.getView(R.id.ll_collection).setSelected(item.getCollectorIdList().contains(AppUtil.getUser().getObjectId()));
+        } else {
+            helper.getView(R.id.ll_collection).setSelected(false);
         }
 
         if (item.getModel().getAvatar() != null && !TextUtils.isEmpty(item.getModel().getAvatar().getFileUrl())) {

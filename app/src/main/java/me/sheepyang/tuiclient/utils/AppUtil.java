@@ -61,6 +61,6 @@ public class AppUtil {
 
     public static void logout() {
         UserEntity.logOut();   //清除缓存用户对象
-//        UserEntity currentUser = BmobUser.getCurrentUser(UserEntity.class); // 现在的currentUser是null了
+        UserEntity currentUser = BmobUser.getCurrentUser(UserEntity.class); // 现在的currentUser是null了
     }
 }

@@ -1,5 +1,7 @@
 package me.sheepyang.tuiclient.fragment.modellist;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,15 +20,22 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.adapter.PhotoBagAdapter;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
+import me.sheepyang.tuiclient.model.bmobentity.UserEntity;
+import me.sheepyang.tuiclient.utils.AppUtil;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.widget.recyclerview.NoAlphaItemAnimator;
+
+import static me.sheepyang.tuiclient.utils.AppUtil.TO_LOGIN;
 
 
 /**
@@ -183,17 +192,13 @@ public class HottestFragment extends BaseLazyFragment {
                     }
                     break;
                 case R.id.ll_collection:
-                    showMessage("收藏");
-//                    if (AppUtil.isLogin()) {
-//                        view.setEnabled(false);
-//                        if ("1".equals(mData.get(position).getSfsc())) {//已收藏
-//                            cancelCollectImages(view, position);
-//                        } else {//未收藏
-//                            collectImages(view, position);
-//                        }
-//                    } else {
-//                        AppUtil.toLogin(mContext);
-//                    }
+                    if (AppUtil.isUserLogin(mContext, true)) {
+                        if (view.isSelected()) {
+                            toCancelCollectPhotoBag(view, mData.get(position));
+                        } else {
+                            toCollectPhotoBag(view, mData.get(position));
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -220,53 +225,102 @@ public class HottestFragment extends BaseLazyFragment {
         });
     }
 
-    /**
-     * 收藏套图
-     */
-    private void collectImages(View view, int position) {
-//        OkGo.post(Api.COLLECT_IMAGES)
-//                .tag(this)
-//                .params("e.imggroupid", mData.get(position).getId())
-//                .execute(new JsonCallback<BaseResponse>() {
-//                    @Override
-//                    public void onSuccess(BaseResponse baseResponse, Call call, Response response) {
-//                        if (baseResponse != null && baseResponse.isTrue(mContext)) {
-//                            mData.get(position).setImggroupsee(mData.get(position).getImggroupsee() + 1);
-//                            mData.get(position).setSfsc("1");
-//                            mAdapter.setNewData(mData);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onAfter(BaseResponse baseResponse, Exception e) {
-//                        super.onAfter(baseResponse, e);
-//                        view.setEnabled(true);
-//                    }
-//                });
+
+    private void toCancelCollectPhotoBag(View view, PhotoBagEntity photoBagEntity) {
+        ((BaseActivity) mContext).showDialog("正在取消收藏...");
+        view.setEnabled(false);
+        UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
+        if (photoBagEntity.getCollectorIdList().contains(user.getObjectId())) {
+            photoBagEntity.getCollectorIdList().remove(user.getObjectId());
+        }
+        photoBagEntity.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+//                    ((BaseActivity) mContext).setDialogMessage("正在收藏2...");
+                    //将当前用户添加到Post表中的likes字段值中，表明当前用户喜欢该帖子
+                    BmobRelation relation = new BmobRelation();
+                    //将当前用户添加到多对多关联中
+                    relation.remove(user);
+                    //多对多关联指向`post`的`likes`字段
+                    photoBagEntity.setCollector(relation);
+                    photoBagEntity.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            ((BaseActivity) mContext).closeDialog();
+                            view.setEnabled(true);
+                            if (e == null) {
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                BmobExceptionUtil.handler(e);
+                            }
+                        }
+
+                    });
+                } else {
+                    ((BaseActivity) mContext).closeDialog();
+                    BmobExceptionUtil.handler(e);
+                }
+            }
+        });
     }
 
     /**
-     * 取消收藏套
+     * 收藏套图
+     *
+     * @param view
+     * @param photoBagEntity
      */
-    private void cancelCollectImages(View view, int position) {
-//        OkGo.post(Api.CANCEL_COLLECT_IMAGES)
-//                .tag(this)
-//                .params("e.imggroupid", mData.get(position).getId())
-//                .execute(new JsonCallback<BaseResponse>() {
-//                    @Override
-//                    public void onSuccess(BaseResponse baseResponse, Call call, Response response) {
-//                        if (baseResponse != null && baseResponse.isTrue(mContext)) {
-//                            mData.get(position).setImggroupsee(mData.get(position).getImggroupsee() - 1);
-//                            mData.get(position).setSfsc("");
-//                            mAdapter.setNewData(mData);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onAfter(BaseResponse baseResponse, Exception e) {
-//                        super.onAfter(baseResponse, e);
-//                        view.setEnabled(true);
-//                    }
-//                });
+    private void toCollectPhotoBag(View view, PhotoBagEntity photoBagEntity) {
+        ((BaseActivity) mContext).showDialog("正在收藏套图...");
+        view.setEnabled(false);
+        UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
+        if (!photoBagEntity.getCollectorIdList().contains(user.getObjectId())) {
+            photoBagEntity.getCollectorIdList().add(user.getObjectId());
+        }
+        photoBagEntity.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+//                    ((BaseActivity) mContext).setDialogMessage("正在收藏2...");
+                    //将当前用户添加到Post表中的likes字段值中，表明当前用户喜欢该帖子
+                    BmobRelation relation = new BmobRelation();
+                    //将当前用户添加到多对多关联中
+                    relation.add(user);
+                    //多对多关联指向`post`的`likes`字段
+                    photoBagEntity.setCollector(relation);
+                    photoBagEntity.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            ((BaseActivity) mContext).closeDialog();
+                            view.setEnabled(true);
+                            if (e == null) {
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                BmobExceptionUtil.handler(e);
+                            }
+                        }
+
+                    });
+                } else {
+                    ((BaseActivity) mContext).closeDialog();
+                    BmobExceptionUtil.handler(e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case TO_LOGIN:
+                if (resultCode == Activity.RESULT_OK) {
+                    getModelList(true);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
