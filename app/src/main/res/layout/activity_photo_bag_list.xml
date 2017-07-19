@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.photo.PhotoBagListActivity">
+
+    <me.sheepyang.tuiclient.widget.QBar
+        android:id="@+id/q_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:qb_is_back="true"
+        app:qb_title="套图列表"/>
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

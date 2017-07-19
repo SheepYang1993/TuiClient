@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.socks.library.KLog;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import me.sheepyang.tuiclient.R;
@@ -20,8 +21,8 @@ import me.sheepyang.tuiclient.R;
 public class LoadingDialog {
     private TextView mLoadingText;
     private String mMsg;
-    AVLoadingIndicatorView mLoadingView;
-    Dialog mLoadingDialog;
+    private AVLoadingIndicatorView mLoadingView;
+    private Dialog mLoadingDialog;
 
     public LoadingDialog(Context context, String msg) {
         // 首先得到整个View
@@ -39,7 +40,7 @@ public class LoadingDialog {
         // 创建自定义样式的Dialog
         mLoadingDialog = new Dialog(context, R.style.loading_dialog);
         // 设置返回键无效
-        mLoadingDialog.setCancelable(false);
+        mLoadingDialog.setCancelable(true);
         mLoadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));

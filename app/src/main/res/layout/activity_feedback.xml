@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:orientation="vertical"
+    tools:context=".activity.mine.FeedbackActivity">
+
+    <me.sheepyang.tuiclient.widget.QBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:qb_is_back="true"
+        app:qb_title="意见反馈"/>
+
+    <EditText
+        android:id="@+id/edt_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/white"
+        android:gravity="top|left"
+        android:hint="请在此输入意见反馈"
+        android:padding="15dp"/>
+
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_pink_shape"
+        android:text="提交意见"
+        android:textColor="@color/white"
+        android:textSize="17sp"/>
+</LinearLayout>

@@ -135,6 +135,16 @@ public class QBar extends RelativeLayout {
         }
     }
 
+    public void setRightText(String text, int rightDrawableId) {
+        if (!TextUtils.isEmpty(mRightText) && mRightDrawableId != -1) {
+            mLlRight.setVisibility(VISIBLE);
+            mTvRight.setVisibility(VISIBLE);
+            mIvRight.setVisibility(VISIBLE);
+            mTvRight.setTextColor(Color.BLACK);
+            mIvRight.setImageResource(mRightDrawableId);
+        }
+    }
+
     public void setOnRightClickListener(OnClickListener onRightClickListener) {
         mOnRightClickListener = onRightClickListener;
     }

@@ -27,6 +27,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
+import me.sheepyang.tuiclient.activity.photo.PhotoDetailActivity;
 import me.sheepyang.tuiclient.adapter.PhotoBagAdapter;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
@@ -205,10 +206,9 @@ public class HottestFragment extends BaseLazyFragment {
             }
         });
         mAdapter.setOnItemClickListener((BaseQuickAdapter adapter, View view, int position) -> {
-            showMessage("照片列表");
-//            Intent intent = new Intent(mContext, ModelPhotoActivity.class);
-//            intent.putExtra("id", mData.get(position).getId());
-//            startActivity(intent);
+            Intent intent = new Intent(mContext, PhotoDetailActivity.class);
+            intent.putExtra("id", mData.get(position).getObjectId());
+            startActivity(intent);
         });
         mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override

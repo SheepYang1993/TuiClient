@@ -23,12 +23,21 @@ public class PhotoBagEntity extends BmobObject implements Serializable {
     private Integer seeNum;//浏览数
     private Boolean isBlur;//是否模糊
     private Boolean isVip;//是否VIP
+    private Integer habit;//喜好 0全部；1男生；2女生
     private Boolean isShow;//是否展示
     private BmobFile coverPic;//封面
     private Integer photoNum;//套图照片数量
     private BmobRelation collector;//收藏该套图的用户
     private SortEntity sort;//分类
     private List<String> collectorIdList = new ArrayList<>();
+
+    public Integer getHabit() {
+        return habit;
+    }
+
+    public void setHabit(Integer habit) {
+        this.habit = habit;
+    }
 
     public SortEntity getSort() {
         return sort;

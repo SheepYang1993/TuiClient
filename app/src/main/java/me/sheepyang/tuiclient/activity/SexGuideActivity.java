@@ -103,7 +103,7 @@ public class SexGuideActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void saveSex() {
-        int type = 3;
+        int type = 0;
         if (mLlMan.isSelected()) {
             type = 1;
         } else if (mLlWoman.isSelected()) {

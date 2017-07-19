@@ -71,6 +71,12 @@ public class PhotoDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+//        if (AppUtil.getUser() != null) {
+//
+//        } else {
+//            mQBar.setRightText();
+//        }
+
         mHeadView = new SinaRefreshView(mActivity);
         mHeadView.setArrowResource(R.drawable.ico_pink_arrow);
         mRefreshLayout.setHeaderView(mHeadView);
@@ -149,6 +155,7 @@ public class PhotoDetailActivity extends BaseActivity {
     }
 
     private void getModelList(int type, TwinklingRefreshLayout refreshLayout) {
+        showDialog("玩命加载中...");
         BmobQuery<PhotoDetailEntity> query = new BmobQuery<PhotoDetailEntity>();
         //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(mPageSize);

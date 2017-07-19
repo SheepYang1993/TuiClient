@@ -46,9 +46,9 @@ public class SortAdapter extends BaseQuickAdapter<SortEntity, BaseViewHolder> {
         }
 
         if (item.getBlur()) {
-            transformation = new MultiTransformation(new CenterCrop(), new MyBlurTransformation(mContext, 10, 8));
+            transformation = new MultiTransformation<>(new CenterCrop(), new MyBlurTransformation(mContext, 10, 8));
         } else {
-            transformation = new MultiTransformation(new CenterCrop());
+            transformation = new MultiTransformation<>(new CenterCrop());
         }
         if (item.getPic() != null && !TextUtils.isEmpty(item.getPic().getFileUrl())) {
             GlideApp.with(mContext)

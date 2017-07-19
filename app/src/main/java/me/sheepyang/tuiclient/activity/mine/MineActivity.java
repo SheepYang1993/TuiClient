@@ -115,8 +115,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_select_sex:
-//                startActivity(new Intent(mContext, SelectSexActivity.class));
-                showMessage("选择性别");
+                startActivity(new Intent(mActivity, SelectSexActivity.class));
                 break;
             case R.id.rl_open_vip:
 //                startActivity(new Intent(mContext, BuyVIPActivity.class));
@@ -138,8 +137,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(new Intent(mActivity, UserAgreementActivity.class));
                 break;
             case R.id.tv_feed_back:
-//                startActivity(new Intent(mContext, FeedbackActivity.class));
-                showMessage("我的收藏");
+                startActivity(new Intent(mActivity, FeedbackActivity.class));
                 break;
             case R.id.tv_about:
                 startActivity(new Intent(mActivity, AboutActivity.class));

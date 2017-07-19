@@ -85,6 +85,7 @@ dependencies {
     compile rootProject.ext.dependencies["base-recyclerview-adapter-helper"]
     compile rootProject.ext.dependencies["glide-transformations"]
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
+    compile 'com.github.zcweng:switch-button:0.0.3@aar'
     compile rootProject.ext.dependencies["tkrefreshlayout"]
     compile rootProject.ext.dependencies["umeng-analytics"]
     compile rootProject.ext.dependencies["util-code"]

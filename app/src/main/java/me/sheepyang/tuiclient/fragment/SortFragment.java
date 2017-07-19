@@ -14,7 +14,6 @@ import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.footer.LoadingView;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
-import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +24,8 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
+import me.sheepyang.tuiclient.activity.photo.PhotoBagListActivity;
 import me.sheepyang.tuiclient.adapter.SortAdapter;
-import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.model.bmobentity.SortEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
@@ -99,16 +98,19 @@ public class SortFragment extends BaseLazyFragment {
                 if (item.getVip()) {
                     if (AppUtil.isUserLogin(mContext, true)) {
                         if (AppUtil.isUserVip()) {
-                            showMessage("模特列表");
+                            Intent intent = new Intent(mContext, PhotoBagListActivity.class);
+                            intent.putExtra("id", mDatas.get(position).getObjectId());
+                            intent.putExtra("title", mDatas.get(position).getName());
+                            startActivity(intent);
                         } else {
                             mHintDialog.show();
                         }
                     }
                 } else {
-                    showMessage("模特列表");
-//                Intent intent = new Intent(mContext, ModelListActivity.class);
-//                intent.putExtra("id", mDatas.get(position).getId());
-//                startActivity(intent);
+                    Intent intent = new Intent(mContext, PhotoBagListActivity.class);
+                    intent.putExtra("id", mDatas.get(position).getObjectId());
+                    intent.putExtra("title", mDatas.get(position).getName());
+                    startActivity(intent);
                 }
             }
         });
@@ -148,7 +150,6 @@ public class SortFragment extends BaseLazyFragment {
             public void done(List<SortEntity> object, BmobException e) {
                 if (e == null) {
                     if (object != null && object.size() > 0) {
-                        KLog.i(Constants.TAG, object.size());
                         switch (type) {
                             case 0://下拉刷新
                                 mDatas = object;

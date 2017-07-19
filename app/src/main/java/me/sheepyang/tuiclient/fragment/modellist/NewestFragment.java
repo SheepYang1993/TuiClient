@@ -28,19 +28,23 @@ import java.util.List;
 import butterknife.BindView;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
+import me.sheepyang.tuiclient.activity.photo.ModelDetailActivity;
 import me.sheepyang.tuiclient.activity.photo.PhotoDetailActivity;
 import me.sheepyang.tuiclient.adapter.PhotoBagAdapter;
 import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.loader.GlideImageLoader;
 import me.sheepyang.tuiclient.model.bmobentity.AdvEntity;
+import me.sheepyang.tuiclient.model.bmobentity.ModelEntity;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
+import me.sheepyang.tuiclient.model.bmobentity.SortEntity;
 import me.sheepyang.tuiclient.model.bmobentity.UserEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
 import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
@@ -120,6 +124,7 @@ public class NewestFragment extends BaseLazyFragment {
     }
 
     private void getModelList(final boolean isPullRefresh) {
+        KLog.i();
         if (isPullRefresh) {//下拉刷新
             mCurrentPage = 1;
         } else {//加载更多
@@ -131,6 +136,20 @@ public class NewestFragment extends BaseLazyFragment {
         if (isPullRefresh) {//下拉刷新
             mCurrentPage = 0;
         }
+        if (!TextUtils.isEmpty(mTypeId)) {//过滤出分类
+            SortEntity sortEntity = new SortEntity();
+            sortEntity.setObjectId(mTypeId);
+            query.addWhereEqualTo("sort", new BmobPointer(sortEntity));
+        }
+        if (!TextUtils.isEmpty(mModelId)) {//过滤出模特
+            ModelEntity modelEntity = new ModelEntity();
+            modelEntity.setObjectId(mModelId);
+            query.addWhereEqualTo("model", new BmobPointer(modelEntity));
+        }
+        int habit = new SPUtils(Constants.SP_NAME).getInt(Constants.SP_SELECT_SEX, -1);
+        if (habit != -1 && habit != 0) {
+            query.addWhereEqualTo("habit", habit);
+        }
         query.setSkip(mCurrentPage * mPageSize);
         query.include("model,collector");
         // 多个排序字段可以用（，）号分隔
@@ -141,11 +160,8 @@ public class NewestFragment extends BaseLazyFragment {
 
             @Override
             public void done(List<PhotoBagEntity> object, BmobException e) {
-                KLog.i();
                 if (e == null) {
-                    KLog.i();
                     if (object != null && object.size() > 0) {
-                        KLog.i();
                         if (isPullRefresh) {//下拉刷新
                             mData = object;
                         } else {//上拉加载更多
@@ -164,7 +180,6 @@ public class NewestFragment extends BaseLazyFragment {
                         }
                     }
                 } else {
-                    KLog.i();
                     ((BaseActivity) mContext).closeDialog();
                     BmobExceptionUtil.handler(e);
                 }
@@ -186,8 +201,8 @@ public class NewestFragment extends BaseLazyFragment {
         query.setLimit(100);
         query.addWhereEqualTo("isShow", Boolean.TRUE);
 
-        int habit = new SPUtils(Constants.SP_NAME).getInt(Constants.SP_SELECT_SEX, 0);
-        if (habit == 1 || habit == 2) {
+        int habit = new SPUtils(Constants.SP_NAME).getInt(Constants.SP_SELECT_SEX, -1);
+        if (habit != -1 && habit != 0) {
             query.addWhereEqualTo("habit", habit);
         }
 
@@ -298,10 +313,9 @@ public class NewestFragment extends BaseLazyFragment {
             switch (view.getId()) {
                 case R.id.iv_avatar:
                     if (mIsIvAvatarClickable) {
-//                        Intent intent = new Intent(mContext, ModelDetailActivity.class);
-//                        intent.putExtra("id", mData.get(position).getModelid());
-//                        startActivity(intent);
-                        showMessage("模特详情");
+                        Intent intent = new Intent(mContext, ModelDetailActivity.class);
+                        intent.putExtra("id", mData.get(position).getModel().getObjectId());
+                        startActivity(intent);
                     }
                     break;
                 case R.id.ll_collection:
