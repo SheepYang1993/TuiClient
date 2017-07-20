@@ -252,7 +252,7 @@ public class NewestFragment extends BaseLazyFragment {
             //开始轮播
             mBannar.startAutoPlay();
         }
-        if (mContext != null && ((HomePageActivity) mContext).mNewestNeedRefresh) {
+        if (mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mNewestNeedRefresh) {
             ((HomePageActivity) mContext).mNewestNeedRefresh = false;
             initData();
         }

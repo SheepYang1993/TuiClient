@@ -168,7 +168,7 @@ public class HottestFragment extends BaseLazyFragment {
     @Override
     protected void lazyLoad() {
         super.lazyLoad();
-        if (mContext != null && ((HomePageActivity) mContext).mHottestNeedRefresh) {
+        if (mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mHottestNeedRefresh) {
             ((HomePageActivity) mContext).mHottestNeedRefresh = false;
             initData();
         }

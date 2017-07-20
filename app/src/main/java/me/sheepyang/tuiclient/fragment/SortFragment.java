@@ -135,7 +135,7 @@ public class SortFragment extends BaseLazyFragment {
     @Override
     protected void lazyLoad() {
         super.lazyLoad();
-        if (mContext != null && ((HomePageActivity) mContext).mSortNeedRefresh) {
+        if (mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mSortNeedRefresh) {
             ((HomePageActivity) mContext).mSortNeedRefresh = false;
             initData();
         }
