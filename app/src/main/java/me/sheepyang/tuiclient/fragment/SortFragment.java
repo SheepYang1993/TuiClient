@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -23,9 +24,11 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import me.sheepyang.tuiclient.R;
+import me.sheepyang.tuiclient.activity.HomePageActivity;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.activity.photo.PhotoBagListActivity;
 import me.sheepyang.tuiclient.adapter.SortAdapter;
+import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.model.bmobentity.SortEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
@@ -129,6 +132,15 @@ public class SortFragment extends BaseLazyFragment {
         });
     }
 
+    @Override
+    protected void lazyLoad() {
+        super.lazyLoad();
+        if (mContext != null && ((HomePageActivity) mContext).mSortNeedRefresh) {
+            ((HomePageActivity) mContext).mSortNeedRefresh = false;
+            initData();
+        }
+    }
+
     private void getTypeData(int type, TwinklingRefreshLayout refreshLayout) {
         BmobQuery<SortEntity> query = new BmobQuery<SortEntity>();
         query.addWhereEqualTo("isShow", Boolean.TRUE);
@@ -138,6 +150,10 @@ public class SortFragment extends BaseLazyFragment {
             case 0://下拉刷新
                 mCurrentPage = 0;
                 break;
+        }
+        int habit = new SPUtils(Constants.SP_NAME).getInt(Constants.SP_SELECT_SEX, -1);
+        if (habit != -1 && habit != 0) {
+            query.addWhereEqualTo("habit", habit);
         }
         query.setSkip(mCurrentPage * mPageSize);
 //        query.order("-updatedAt");

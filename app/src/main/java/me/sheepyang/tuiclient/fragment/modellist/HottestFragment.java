@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -26,9 +27,11 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import me.sheepyang.tuiclient.R;
+import me.sheepyang.tuiclient.activity.HomePageActivity;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.activity.photo.PhotoDetailActivity;
 import me.sheepyang.tuiclient.adapter.PhotoBagAdapter;
+import me.sheepyang.tuiclient.app.Constants;
 import me.sheepyang.tuiclient.fragment.base.BaseLazyFragment;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
 import me.sheepyang.tuiclient.model.bmobentity.UserEntity;
@@ -99,6 +102,10 @@ public class HottestFragment extends BaseLazyFragment {
         if (isPullRefresh) {//下拉刷新
             mCurrentPage = 0;
         }
+        int habit = new SPUtils(Constants.SP_NAME).getInt(Constants.SP_SELECT_SEX, -1);
+        if (habit != -1 && habit != 0) {
+            query.addWhereEqualTo("habit", habit);
+        }
         query.setSkip(mCurrentPage * mPageSize);
         query.include("model");
         query.order("collectedNum,seeNum");
@@ -108,11 +115,8 @@ public class HottestFragment extends BaseLazyFragment {
 
             @Override
             public void done(List<PhotoBagEntity> object, BmobException e) {
-                KLog.i();
                 if (e == null) {
-                    KLog.i();
                     if (object != null && object.size() > 0) {
-                        KLog.i();
                         if (isPullRefresh) {//下拉刷新
                             mData = object;
                         } else {//上拉加载更多
@@ -121,7 +125,6 @@ public class HottestFragment extends BaseLazyFragment {
                         mAdapter.setNewData(mData);
                         mCurrentPage++;
                     } else {
-                        KLog.i();
                         if (isPullRefresh) {//下拉刷新
                             mData.clear();
                             mAdapter.setNewData(mData);
@@ -131,7 +134,6 @@ public class HottestFragment extends BaseLazyFragment {
                         }
                     }
                 } else {
-                    KLog.i();
                     ((BaseActivity) mContext).closeDialog();
                     BmobExceptionUtil.handler(e);
                 }
@@ -161,6 +163,15 @@ public class HottestFragment extends BaseLazyFragment {
     @Override
     protected void initData() {
         getModelList(true);
+    }
+
+    @Override
+    protected void lazyLoad() {
+        super.lazyLoad();
+        if (mContext != null && ((HomePageActivity) mContext).mHottestNeedRefresh) {
+            ((HomePageActivity) mContext).mHottestNeedRefresh = false;
+            initData();
+        }
     }
 
     private void initView() {

@@ -105,9 +105,9 @@ public class SexGuideActivity extends BaseActivity implements View.OnClickListen
     private void saveSex() {
         int type = 0;
         if (mLlMan.isSelected()) {
-            type = 1;
-        } else if (mLlWoman.isSelected()) {
             type = 2;
+        } else if (mLlWoman.isSelected()) {
+            type = 1;
         }
         new SPUtils(Constants.SP_NAME).put(Constants.SP_SELECT_SEX, type);
         startActivity(new Intent(SexGuideActivity.this, HomePageActivity.class));

@@ -29,6 +29,8 @@ import static me.sheepyang.tuiclient.utils.AppUtil.TO_LOGIN;
 public class MineActivity extends BaseActivity implements View.OnClickListener {
     public static final String USER_AVATAR = "user_avatar";
     public static final String USER_NICK_NAME = "user_nick_name";
+    private static final int TO_SELECT_SEX = 0x0012;
+    public static final int RESULT_REFRESH = 0x0013;
 
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
@@ -115,7 +117,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_select_sex:
-                startActivity(new Intent(mActivity, SelectSexActivity.class));
+                startActivityForResult(new Intent(mActivity, SelectSexActivity.class), TO_SELECT_SEX);
                 break;
             case R.id.rl_open_vip:
 //                startActivity(new Intent(mContext, BuyVIPActivity.class));
@@ -181,6 +183,11 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                     } else {
                         mTvNickName.setText("未登录");
                     }
+                }
+                break;
+            case TO_SELECT_SEX:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_REFRESH);
                 }
                 break;
             default:

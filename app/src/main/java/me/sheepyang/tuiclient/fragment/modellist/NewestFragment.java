@@ -34,6 +34,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import me.sheepyang.tuiclient.R;
+import me.sheepyang.tuiclient.activity.HomePageActivity;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.activity.photo.ModelDetailActivity;
 import me.sheepyang.tuiclient.activity.photo.PhotoDetailActivity;
@@ -250,6 +251,10 @@ public class NewestFragment extends BaseLazyFragment {
         if (mIsShowBannar) {
             //开始轮播
             mBannar.startAutoPlay();
+        }
+        if (mContext != null && ((HomePageActivity) mContext).mNewestNeedRefresh) {
+            ((HomePageActivity) mContext).mNewestNeedRefresh = false;
+            initData();
         }
     }
 

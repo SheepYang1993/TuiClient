@@ -27,6 +27,7 @@ import me.sheepyang.tuiclient.utils.AppUtil;
 
 public class HomePageActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final int TO_MINE = 0x0018;
     @BindView(R.id.tab_layout)
     CommonTabLayout mTabLayout;
     @BindView(R.id.view_pager)
@@ -35,6 +36,9 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     private List<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
     private long mCurrentTime;
+    public boolean mNewestNeedRefresh;
+    public boolean mHottestNeedRefresh;
+    public boolean mSortNeedRefresh;
 
     @Override
     public int setLayoutId() {
@@ -109,7 +113,7 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_mine:
-                startActivity(new Intent(mActivity, MineActivity.class));
+                startActivityForResult(new Intent(mActivity, MineActivity.class), TO_MINE);
                 break;
             case R.id.iv_search:
                 showMessage("搜索");
@@ -120,9 +124,22 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case TO_MINE:
+                if (resultCode == MineActivity.RESULT_REFRESH) {
+                    mNewestNeedRefresh = true;
+                    mHottestNeedRefresh = true;
+                    mSortNeedRefresh = true;
+                }
+                break;
+            default:
+                break;
+        }
         mFragmentList.get(mViewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
     }
 }
