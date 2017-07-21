@@ -120,8 +120,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                 startActivityForResult(new Intent(mActivity, SelectSexActivity.class), TO_SELECT_SEX);
                 break;
             case R.id.rl_open_vip:
-//                startActivity(new Intent(mContext, BuyVIPActivity.class));
-                showMessage("购买VIP");
+                startActivity(new Intent(mActivity, BuyVIPActivity.class));
                 break;
             case R.id.rl_collection:
                 if (AppUtil.isUserLogin(mActivity, true)) {
