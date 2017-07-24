@@ -25,6 +25,8 @@ import me.sheepyang.tuiclient.fragment.modellist.NewestFragment;
 import me.sheepyang.tuiclient.model.entity.TabEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
 
+import static me.sheepyang.tuiclient.utils.AppUtil.TO_LOGIN;
+
 public class HomePageActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int TO_MINE = 0x0018;
@@ -125,11 +127,17 @@ public class HomePageActivity extends BaseActivity implements View.OnClickListen
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case TO_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    mNewestNeedRefresh = true;
+                    mHottestNeedRefresh = true;
+                    mSortNeedRefresh = true;
+                }
+                break;
             case TO_MINE:
                 if (resultCode == MineActivity.RESULT_REFRESH) {
                     mNewestNeedRefresh = true;

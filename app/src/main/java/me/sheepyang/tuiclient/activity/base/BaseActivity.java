@@ -38,7 +38,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showDialog(String msg) {
-        mDialog = new LoadingDialog(mActivity, msg);
+        if (mDialog == null) {
+            mDialog = new LoadingDialog(mActivity, msg);
+        } else {
+            mDialog.setMessage(msg);
+        }
         mDialog.show();
     }
 

@@ -166,12 +166,14 @@ public class HottestFragment extends BaseLazyFragment {
     }
 
     @Override
-    protected void lazyLoad() {
-        super.lazyLoad();
-        if (mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mHottestNeedRefresh) {
-            ((HomePageActivity) mContext).mHottestNeedRefresh = false;
-            initData();
+    protected boolean lazyLoad() {
+        if (!super.lazyLoad()) {
+            if (!isFirst && mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mHottestNeedRefresh) {
+                ((HomePageActivity) mContext).mHottestNeedRefresh = false;
+                initData();
+            }
         }
+        return true;
     }
 
     private void initView() {

@@ -100,6 +100,13 @@
         <activity
             android:name=".activity.mine.BuyVIPActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.CollectionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.photo.ImageBrowserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"/>
     </application>
 
 </manifest>

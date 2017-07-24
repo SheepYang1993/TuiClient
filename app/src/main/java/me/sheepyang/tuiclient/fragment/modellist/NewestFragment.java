@@ -246,16 +246,18 @@ public class NewestFragment extends BaseLazyFragment {
     }
 
     @Override
-    protected void lazyLoad() {
-        super.lazyLoad();
+    protected boolean lazyLoad() {
+        if (!super.lazyLoad()) {
+            if (!isFirst && mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mNewestNeedRefresh) {
+                ((HomePageActivity) mContext).mNewestNeedRefresh = false;
+                initData();
+            }
+        }
         if (mIsShowBannar) {
             //开始轮播
             mBannar.startAutoPlay();
         }
-        if (mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mNewestNeedRefresh) {
-            ((HomePageActivity) mContext).mNewestNeedRefresh = false;
-            initData();
-        }
+        return true;
     }
 
     @Override

@@ -133,12 +133,14 @@ public class SortFragment extends BaseLazyFragment {
     }
 
     @Override
-    protected void lazyLoad() {
-        super.lazyLoad();
-        if (mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mSortNeedRefresh) {
-            ((HomePageActivity) mContext).mSortNeedRefresh = false;
-            initData();
+    protected boolean lazyLoad() {
+        if (!super.lazyLoad()) {
+            if (!isFirst && mContext != null && mContext instanceof HomePageActivity && ((HomePageActivity) mContext).mSortNeedRefresh) {
+                ((HomePageActivity) mContext).mSortNeedRefresh = false;
+                initData();
+            }
         }
+        return true;
     }
 
     private void getTypeData(int type, TwinklingRefreshLayout refreshLayout) {

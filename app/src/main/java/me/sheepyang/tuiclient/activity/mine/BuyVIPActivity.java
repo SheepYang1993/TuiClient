@@ -1,6 +1,7 @@
 package me.sheepyang.tuiclient.activity.mine;
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +43,8 @@ public class BuyVIPActivity extends BaseActivity {
     RecyclerView mRecyclerView;
     @BindView(R.id.ll_main)
     LinearLayout mLlMain;
+    @BindView(R.id.scroll_view)
+    NestedScrollView mScrollView;
     private VIPEntity mVIPEntity;
     private View mEmptyView;
     private List<VIPDetailEntity> mVipDetailData = new ArrayList<>();
@@ -115,6 +118,9 @@ public class BuyVIPActivity extends BaseActivity {
                 mVipDetailData = mVIPEntity.getVipList();
                 mAdapter.setNewData(mVipDetailData);
             }
+            mScrollView.postDelayed(() -> {
+                mScrollView.scrollTo(0, 0);
+            }, 100);
         } else {
             mLlMain.setVisibility(View.GONE);
         }

@@ -1,7 +1,10 @@
 package me.sheepyang.tuiclient.activity.photo;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -23,6 +26,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
+import me.sheepyang.tuiclient.activity.mine.BuyVIPActivity;
 import me.sheepyang.tuiclient.adapter.PhotoDetailAdapter;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoBagEntity;
 import me.sheepyang.tuiclient.model.bmobentity.PhotoDetailEntity;
@@ -48,7 +52,7 @@ public class PhotoDetailActivity extends BaseActivity {
     private QDialog mHintDialog;
     private int mCurrentPage;
     private View mEmptyView;
-    private int mPageSize = 8;
+    private int mPageSize = 10;
     private String mId;
 
     @Override
@@ -102,33 +106,38 @@ public class PhotoDetailActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (AppUtil.isUserLogin(mActivity, true)) {//已登录
-                    showMessage("浏览图片");
-//                    if (position >= mAdapter.getSeeCount()) {//图片已上锁
-//                        mHintDialog.show();
-//                    } else {
-//                        boolean isMoreLock = false;
-//                        ArrayList<String> modelPathList = new ArrayList<>();
-//                        for (int i = 0; i < mData.size(); i++) {
-//                            if (i >= mAdapter.getSeeCount()) {
-//                                isMoreLock = true;
-//                            } else {
-//                                modelPathList.add(Api.LOAD_IMAGE + mData.get(i).getImgname());
-//                            }
-//                        }
-//                        Intent intent = new Intent(mContext, ImageBrowserActivity.class);
-//                        intent.putExtra(POSITION, position);
-//                        intent.putExtra(IS_MORE_LOCK, isMoreLock);
-//                        intent.putExtra(IMAGE_LIST, modelPathList);
-//                        startActivity(intent);
-//                    }
+                    if (mData != null && mData.size() > 0) {
+                        ArrayList<String> imageList = new ArrayList<String>();
+                        String imgPath;
+                        for (PhotoDetailEntity entity :
+                                mData) {
+                            if (entity != null && entity.getPic() != null && (entity.getBlur() == null || !entity.getBlur())) {
+                                imgPath = entity.getPic().getFileUrl();
+                                if (!TextUtils.isEmpty(imgPath)) {
+                                    imageList.add(imgPath);
+                                }
+                            }
+                        }
+                        Intent intent1 = new Intent(mActivity, ImageBrowserActivity.class);
+                        intent1.putExtra(ImageBrowserActivity.IMAGE_LIST, imageList);
+                        intent1.putExtra(ImageBrowserActivity.POSITION, position);
+                        //主要的语句
+                        //通过makeSceneTransitionAnimation传入多个Pair
+                        //每个Pair将一个当前Activity的View和目标Activity中的一个Key绑定起来
+                        //在目标Activity中会调用这个Key
+                        ActivityOptionsCompat activityOptions = ActivityOptionsCompat
+                                .makeSceneTransitionAnimation(mActivity, view, "image");
+
+                        // ActivityCompat是android支持库中用来适应不同android版本的
+                        ActivityCompat.startActivity(mActivity, intent1, activityOptions.toBundle());
+                    }
                 }
             }
         });
         mHintDialog.setOnRightClickListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                showMessage("购买VIP");
-//                startActivity(new Intent(mActivity, BuyVIPActivity.class));
+                startActivity(new Intent(mActivity, BuyVIPActivity.class));
             }
         });
         mQBar.setOnRightClickListener(new View.OnClickListener() {

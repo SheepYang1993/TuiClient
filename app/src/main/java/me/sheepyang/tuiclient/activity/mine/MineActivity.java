@@ -124,8 +124,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.rl_collection:
                 if (AppUtil.isUserLogin(mActivity, true)) {
-//                    startActivity(new Intent(mContext, CollectionActivity.class));
-                    showMessage("我的收藏");
+                    startActivity(new Intent(mActivity, CollectionActivity.class));
                 }
                 break;
             case R.id.tv_clear_memory:

@@ -1,6 +1,7 @@
 package me.sheepyang.tuiclient.activity.photo;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
+import me.sheepyang.tuiclient.activity.mine.BuyVIPActivity;
 import me.sheepyang.tuiclient.fragment.modellist.NewestFragment;
 import me.sheepyang.tuiclient.model.bmobentity.ModelEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
@@ -59,8 +61,7 @@ public class ModelDetailActivity extends BaseActivity implements View.OnClickLis
 
     private void initListener() {
         mHintialog.setOnRightClickListener((DialogInterface dialog, int which) -> {
-//            startActivity(new Intent(mContext, BuyVIPActivity.class));
-            showMessage("跳转到购买会员");
+            startActivity(new Intent(mActivity, BuyVIPActivity.class));
         });
     }
 

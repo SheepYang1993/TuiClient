@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 public abstract class BaseLazyFragment extends BaseFragment {
     protected boolean isVisible;
     private boolean isPrepared;
-    private boolean isFirst = true;
+    public boolean isFirst = true;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -43,12 +43,13 @@ public abstract class BaseLazyFragment extends BaseFragment {
     /**
      * 懒加载
      */
-    protected void lazyLoad() {
+    protected boolean lazyLoad() {
         if (!isPrepared || !isVisible || !isFirst) {
-            return;
+            return false;
         }
         initData();
         isFirst = false;
+        return true;
     }
 
     /**
