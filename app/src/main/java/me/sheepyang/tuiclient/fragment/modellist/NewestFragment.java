@@ -125,7 +125,6 @@ public class NewestFragment extends BaseLazyFragment {
     }
 
     private void getModelList(final boolean isPullRefresh) {
-        KLog.i();
         if (isPullRefresh) {//下拉刷新
             mCurrentPage = 1;
         } else {//加载更多
@@ -184,8 +183,6 @@ public class NewestFragment extends BaseLazyFragment {
                     ((BaseActivity) mContext).closeDialog();
                     BmobExceptionUtil.handler(e);
                 }
-
-                KLog.i();
                 ((BaseActivity) mContext).closeDialog();
                 if (isPullRefresh) {//下拉刷新
                     mRefreshLayout.finishRefreshing();
@@ -208,7 +205,7 @@ public class NewestFragment extends BaseLazyFragment {
         }
 
         query.order("-updatedAt");
-        ((BaseActivity) mContext).showDialog("正在加载广告...");
+        ((BaseActivity) mContext).showDialog("玩命加载中...");
         //执行查询方法
         query.findObjects(new FindListener<AdvEntity>() {
 

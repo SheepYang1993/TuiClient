@@ -29,6 +29,7 @@ import cn.bmob.v3.listener.UpdateListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.HomePageActivity;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
+import me.sheepyang.tuiclient.activity.photo.ModelDetailActivity;
 import me.sheepyang.tuiclient.activity.photo.PhotoDetailActivity;
 import me.sheepyang.tuiclient.adapter.PhotoBagAdapter;
 import me.sheepyang.tuiclient.app.Constants;
@@ -199,10 +200,9 @@ public class HottestFragment extends BaseLazyFragment {
             switch (view.getId()) {
                 case R.id.iv_avatar:
                     if (mIsIvAvatarClickable) {
-                        showMessage("跳转模特详情");
-//                        Intent intent = new Intent(mContext, ModelDetailActivity.class);
-//                        intent.putExtra("id", mData.get(position).getModelid());
-//                        startActivity(intent);
+                        Intent intent = new Intent(mContext, ModelDetailActivity.class);
+                        intent.putExtra("id", mData.get(position).getModel().getObjectId());
+                        startActivity(intent);
                     }
                     break;
                 case R.id.ll_collection:

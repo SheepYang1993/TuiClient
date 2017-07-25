@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.socks.library.KLog;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import me.sheepyang.tuiclient.R;
@@ -49,10 +48,6 @@ public class LoadingDialog {
     public void show() {
         mLoadingDialog.show();
         mLoadingView.smoothToShow();
-    }
-
-    public void close() {
-        close(false);
     }
 
     public void close(boolean isDestroy) {

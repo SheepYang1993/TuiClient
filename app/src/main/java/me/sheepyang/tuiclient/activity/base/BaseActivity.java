@@ -53,17 +53,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void closeDialog() {
+        closeDialog(false);
+    }
+
+    public void closeDialog(boolean isDestroy) {
         if (mDialog != null) {
-            mDialog.close();
+            mDialog.close(isDestroy);
         }
     }
 
     @Override
     protected void onDestroy() {
-        if (mDialog != null) {
-            mDialog.close();
-            mDialog = null;
-        }
+        closeDialog(true);
+        mDialog = null;
         AppManager.getAppManager().finishActivity(mActivity);
         super.onDestroy();
     }

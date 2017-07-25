@@ -109,4 +109,9 @@
         <item name="picture.folder_checked_dot">@drawable/orange_oval</item>
     </style>
 
+
+    <style name="AnimBottom">
+        <item name="android:windowEnterAnimation">@anim/up_view</item>
+        <item name="android:windowExitAnimation">@anim/dowm_view</item>
+    </style>
 </resources>

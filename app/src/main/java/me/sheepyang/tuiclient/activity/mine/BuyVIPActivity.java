@@ -128,7 +128,7 @@ public class BuyVIPActivity extends BaseActivity {
 
     private void getVIPInfo() {
 //        OkGo.post(Api.VIP_INFO)
-//                .tag(this)
+//                .tag(mActivity)
 //                .params("", "")
 //                .execute(new JsonCallback<VIPResponse>() {
 //                    @Override

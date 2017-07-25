@@ -31,6 +31,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     public static final String USER_NICK_NAME = "user_nick_name";
     private static final int TO_SELECT_SEX = 0x0012;
     public static final int RESULT_REFRESH = 0x0013;
+    private static final int TO_EDIT_INFO = 0x0014;
 
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
@@ -147,21 +148,21 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                     mHintDialog.show();
                 }
                 break;
-            case R.id.iv_avatar:
+            case R.id.iv_avatar://修改个人昵称、头像、密码
             case R.id.tv_nick_name:
             case R.id.tv_edit_info:
                 if (AppUtil.isUserLogin(mActivity, true)) {
-                    showMessage("编辑个人信息");
-//                    Intent intent = new Intent(mContext, EditInfoActivity.class);
-//                    if (mUser != null) {
-//                        if (!TextUtils.isEmpty(mUser.getNikename())) {
-//                            intent.putExtra(USER_NICK_NAME, mUser.getNikename());
-//                        }
-//                        if (!TextUtils.isEmpty(mUser.getAvatar())) {
-//                            intent.putExtra(USER_AVATAR, mUser.getAvatar());
-//                        }
-//                    }
-//                    startActivityForResult(intent, QContacts.TO_EDIT_INFO);
+                    Intent intent = new Intent(mActivity, EditInfoActivity.class);
+                    UserEntity user = AppUtil.getUser();
+                    if (user != null) {
+                        if (!TextUtils.isEmpty(user.getNick())) {
+                            intent.putExtra(USER_NICK_NAME, user.getNick());
+                        }
+                        if (user.getAvatar() != null && !TextUtils.isEmpty(user.getAvatar().getFileUrl())) {
+                            intent.putExtra(USER_AVATAR, user.getAvatar().getFileUrl());
+                        }
+                    }
+                    startActivityForResult(intent, TO_EDIT_INFO);
                 }
                 break;
             default:
@@ -174,7 +175,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case TO_LOGIN:
-//            case TO_EDIT_INFO:
+            case TO_EDIT_INFO:
                 if (resultCode == RESULT_OK) {
                     if (AppUtil.isUserLogin(mActivity, false)) {
                         getUserInfo();

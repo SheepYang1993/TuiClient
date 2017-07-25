@@ -107,6 +107,19 @@
             android:name=".activity.photo.ImageBrowserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"/>
+        <activity
+            android:name=".activity.mine.EditInfoActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.EditPasswordActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.EditNameActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.lzy.imagepicker.ui.ImagePreviewDelActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ImagePickerThemeFullScreen"/>
     </application>
 
 </manifest>

@@ -167,10 +167,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             return;
         }
         mTvGetVerifyCode.setEnabled(false);
-        mCurrentTime = 60;
-        mTvGetVerifyCode.setText(mCurrentTime + "s");
-        mHandler.sendEmptyMessageDelayed(0, 1000);
-        mEdtGetCode.setText("");
         showDialog("正在获取验证码...");
         BmobSMS.requestSMSCode(mEdtPhone.getText().toString().trim(), "短信验证", new QueryListener<Integer>() {
 
@@ -179,6 +175,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 closeDialog();
                 if (ex == null) {//验证码发送成功
                     Log.i("smile", "短信id：" + smsId);//用于查询本次短信发送详情
+                    mCurrentTime = 60;
+                    mTvGetVerifyCode.setText(mCurrentTime + "s");
+                    mHandler.sendEmptyMessageDelayed(0, 1000);
+                    mEdtGetCode.setText("");
+                    showMessage("验证码已发送");
+                    mTvGetVerifyCode.setEnabled(true);
                 } else {
                     BmobExceptionUtil.handler(ex);
                 }
