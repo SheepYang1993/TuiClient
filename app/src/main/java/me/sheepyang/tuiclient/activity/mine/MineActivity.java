@@ -41,6 +41,8 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
     TextView mTvNickName;
     @BindView(R.id.tv_logout)
     TextView mTvLogout;
+    @BindView(R.id.tv_open_vip)
+    TextView mTvOpenVip;
     private QDialog mHintDialog;
 
     @Override
@@ -56,6 +58,7 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         if (AppUtil.isUserLogin(mActivity, false)) {
             getUserInfo();
         } else {
+            mTvOpenVip.setText("开通VIP");
             mTvNickName.setText("未登录");
             mTvLogout.setText("立即登录");
         }
@@ -81,7 +84,14 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
         }
         if (AppUtil.isUserLogin(mActivity, false)) {
             mTvLogout.setText("退出登录");
+            if (AppUtil.getUser().getVip() != null && AppUtil.getUser().getVip()) {
+                mTvOpenVip.setText("我的VIP");
+            } else {
+                mTvOpenVip.setText("开通VIP");
+            }
         } else {
+            mTvOpenVip.setText("开通VIP");
+            mTvNickName.setText("未登录");
             mTvLogout.setText("立即登录");
         }
         mRefreshLayout.setRefreshing(false);
@@ -180,7 +190,9 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
                     if (AppUtil.isUserLogin(mActivity, false)) {
                         getUserInfo();
                     } else {
+                        mTvOpenVip.setText("开通VIP");
                         mTvNickName.setText("未登录");
+                        mTvLogout.setText("立即登录");
                     }
                 }
                 break;

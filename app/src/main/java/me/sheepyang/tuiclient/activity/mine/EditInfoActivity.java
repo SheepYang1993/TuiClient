@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
-import com.socks.library.KLog;
 
 import java.util.ArrayList;
 
@@ -154,7 +153,6 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        KLog.i();
         switch (requestCode) {
             case TO_EDIT_NAME:
                 if (resultCode == RESULT_OK && data != null) {

@@ -15,6 +15,7 @@ import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.adapter.ImageBrowserAdapter;
 import me.sheepyang.tuiclient.fragment.ImageDetailFragment;
+import me.sheepyang.tuiclient.fragment.OpenVIPFragment;
 
 
 public class ImageBrowserActivity extends BaseActivity {
@@ -63,7 +64,7 @@ public class ImageBrowserActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mTvCurrentPage.setText((position + 1) + " / " + mImageList.size());
+                mTvCurrentPage.setText((position + 1) + " / " + (mImageList.size() + 1));
             }
 
             @Override
@@ -79,12 +80,23 @@ public class ImageBrowserActivity extends BaseActivity {
                 mImageList) {
             mFragmentList.add(ImageDetailFragment.newInstance(path));
         }
+//        if (mIsMoreLock) {
+        mFragmentList.add(new OpenVIPFragment().newInstance());
+//        }
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(new ImageBrowserAdapter(getSupportFragmentManager(), mFragmentList, mTitleList));
         if (mImageList.size() <= 1) {
             mTvCurrentPage.setVisibility(View.GONE);
         } else {
-            mTvCurrentPage.setText("1 / " + mImageList.size());
+            mTvCurrentPage.setText("1 / " + (mImageList.size() + 1));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mPosition != -1 && mPosition < mFragmentList.size()) {
+            mViewPager.setCurrentItem(mPosition, false);
+        }
+        super.onBackPressed();
     }
 }

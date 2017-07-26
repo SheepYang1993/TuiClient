@@ -52,7 +52,7 @@ public class PhotoDetailActivity extends BaseActivity {
     private QDialog mHintDialog;
     private int mCurrentPage;
     private View mEmptyView;
-    private int mPageSize = 10;
+    private int mPageSize = 14;
     private String mId;
 
     @Override
@@ -107,10 +107,16 @@ public class PhotoDetailActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (AppUtil.isUserLogin(mActivity, true)) {//已登录
                     if (mData != null && mData.size() > 0) {
+                        if (position > 5) {
+                            mHintDialog.show();
+                            return;
+                        }
                         ArrayList<String> imageList = new ArrayList<String>();
                         String imgPath;
-                        for (PhotoDetailEntity entity :
-                                mData) {
+                        PhotoDetailEntity entity;
+                        int size = mData.size() < 6 ? mData.size() : 6;
+                        for (int i = 0; i < size; i++) {
+                            entity = mData.get(i);
                             if (entity != null && entity.getPic() != null && (entity.getBlur() == null || !entity.getBlur())) {
                                 imgPath = entity.getPic().getFileUrl();
                                 if (!TextUtils.isEmpty(imgPath)) {

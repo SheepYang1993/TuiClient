@@ -1,5 +1,7 @@
 package me.sheepyang.tuiclient.model.bmobentity;
 
+import java.util.List;
+
 import cn.bmob.v3.BmobObject;
 
 /**
@@ -12,6 +14,16 @@ public class VIPDetailEntity extends BmobObject {
     private Boolean isRecommend = false;//是否被推荐
     private Double price;//原价
     private Double rebate;//折扣
+    private Long duration;//套餐持续时长
+    private List<UserEntity> userList;//购买了该套餐的用户
+
+    public List<UserEntity> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<UserEntity> userList) {
+        this.userList = userList;
+    }
 
     public String getName() {
         return name;

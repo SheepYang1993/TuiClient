@@ -16,8 +16,8 @@
 
         <me.sheepyang.tuiclient.widget.QBar
             android:layout_width="match_parent"
-            app:qb_is_back="true"
             android:layout_height="wrap_content"
+            app:qb_is_back="true"
             app:qb_title="我的"/>
 
         <RelativeLayout
@@ -72,6 +72,7 @@
                 android:padding="15dp">
 
                 <TextView
+                    android:id="@+id/tv_open_vip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

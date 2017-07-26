@@ -238,7 +238,6 @@ public class HottestFragment extends BaseLazyFragment {
         });
     }
 
-
     private void toCancelCollectPhotoBag(View view, PhotoBagEntity photoBagEntity) {
         ((BaseActivity) mContext).showDialog("正在取消收藏...");
         view.setEnabled(false);

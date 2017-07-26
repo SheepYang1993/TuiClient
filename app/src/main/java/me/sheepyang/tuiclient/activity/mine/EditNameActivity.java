@@ -40,7 +40,6 @@ public class EditNameActivity extends BaseActivity {
         mUserNickName = getIntent().getStringExtra(USER_NICK_NAME);
         initListener();
         if (!TextUtils.isEmpty(mUserNickName)) {
-            KLog.i(mUserNickName);
             mEdtName.setText(mUserNickName);
             mEdtName.setSelection(mUserNickName.length());
         }

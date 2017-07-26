@@ -19,7 +19,6 @@ import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.footer.LoadingView;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
-import com.socks.library.KLog;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -170,7 +169,6 @@ public class NewestFragment extends BaseLazyFragment {
                         mAdapter.setNewData(mData);
                         mCurrentPage++;
                     } else {
-                        KLog.i();
                         if (isPullRefresh) {//下拉刷新
                             mData.clear();
                             mAdapter.setNewData(mData);
