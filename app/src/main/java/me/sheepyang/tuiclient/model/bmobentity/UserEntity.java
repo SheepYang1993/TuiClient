@@ -3,6 +3,7 @@ package me.sheepyang.tuiclient.model.bmobentity;
 import java.io.Serializable;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**
@@ -12,10 +13,19 @@ import cn.bmob.v3.datatype.BmobFile;
 public class UserEntity extends BmobUser implements Serializable {
     private Integer habit;//喜好 0全部；1男生；2女生
     private Integer level;//账号级别 0普通用户；1管理员；2模特；3VIP
-    private Boolean isVip;//是否是VIP，level==2
+    private Boolean isVip;//是否是VIP，level==3
+    private BmobDate vipEndDate;//VIP结束日期
     private Integer sex;//性别 1男；2女；
     private String nick;//昵称
     private BmobFile avatar;//头像
+
+    public BmobDate getVipEndDate() {
+        return vipEndDate;
+    }
+
+    public void setVipEndDate(BmobDate vipEndDate) {
+        this.vipEndDate = vipEndDate;
+    }
 
     public Integer getSex() {
         return sex;

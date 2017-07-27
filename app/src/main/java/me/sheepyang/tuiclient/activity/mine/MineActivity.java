@@ -9,13 +9,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.socks.library.KLog;
+
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
 import me.sheepyang.tuiclient.R;
 import me.sheepyang.tuiclient.activity.base.BaseActivity;
 import me.sheepyang.tuiclient.model.bmobentity.UserEntity;
 import me.sheepyang.tuiclient.utils.AppUtil;
+import me.sheepyang.tuiclient.utils.BmobExceptionUtil;
 import me.sheepyang.tuiclient.utils.GlideApp;
 import me.sheepyang.tuiclient.utils.transformation.GlideCircleTransform;
 import me.sheepyang.tuiclient.widget.dialog.QDialog;
@@ -61,45 +65,72 @@ public class MineActivity extends BaseActivity implements View.OnClickListener {
             mTvOpenVip.setText("开通VIP");
             mTvNickName.setText("未登录");
             mTvLogout.setText("立即登录");
+            mRefreshLayout.setRefreshing(false);
         }
     }
 
     private void getUserInfo() {
-        UserEntity user = BmobUser.getCurrentUser(UserEntity.class);
-        if (user != null) {
-            if (!TextUtils.isEmpty(user.getNick())) {
-                mTvNickName.setText(user.getNick());
-            } else {
-                mTvNickName.setText("");
+
+        /**
+         * 更新本地用户信息
+         * 适用场景:登录后若web端的用户信息有更新 可以通过该方法拉取最新的用户信息并写到本地缓存(SharedPreferences)中<p>
+         * 注意：需要先登录，否则会报9024错误
+         *
+         * @see cn.bmob.v3.helper.ErrorCode#E9024S
+         */
+        showDialog("正在获取个人信息...");
+        UserEntity.fetchUserInfo(new FetchUserInfoListener<UserEntity>() {
+            @Override
+            public void done(UserEntity userEntity, BmobException e) {
+                closeDialog();
+                mRefreshLayout.setRefreshing(false);
+                if (e == null) {
+                    KLog.i(userEntity.toString());
+                    UserEntity user = AppUtil.getUser();
+                    if (user != null) {
+                        if (!TextUtils.isEmpty(user.getNick())) {
+                            mTvNickName.setText(user.getNick());
+                        } else {
+                            mTvNickName.setText("");
+                        }
+                        String avatarPath = "";
+                        if (user.getAvatar() != null && !TextUtils.isEmpty(user.getAvatar().getFileUrl())) {
+                            avatarPath = user.getAvatar().getFileUrl();
+                        }
+                        GlideApp.with(mActivity)
+                                .load(avatarPath)
+                                .transform(new GlideCircleTransform(mActivity))
+                                .placeholder(R.drawable.ico_user_avatar)
+                                .into(mIvAvatar);
+                    }
+                    if (AppUtil.isUserLogin(mActivity, false)) {
+                        mTvLogout.setText("退出登录");
+                        if (AppUtil.getUser().getVip() != null && AppUtil.getUser().getVip()) {
+                            mTvOpenVip.setText("我的VIP");
+                        } else {
+                            mTvOpenVip.setText("开通VIP");
+                        }
+                    } else {
+                        mTvOpenVip.setText("开通VIP");
+                        mTvNickName.setText("未登录");
+                        mTvLogout.setText("立即登录");
+                    }
+                } else {
+                    BmobExceptionUtil.handler(e);
+                }
             }
-            String avatarPath = "";
-            if (user.getAvatar() != null && !TextUtils.isEmpty(user.getAvatar().getFileUrl())) {
-                avatarPath = user.getAvatar().getFileUrl();
-            }
-            GlideApp.with(mActivity)
-                    .load(avatarPath)
-                    .transform(new GlideCircleTransform(mActivity))
-                    .placeholder(R.drawable.ico_user_avatar)
-                    .into(mIvAvatar);
-        }
-        if (AppUtil.isUserLogin(mActivity, false)) {
-            mTvLogout.setText("退出登录");
-            if (AppUtil.getUser().getVip() != null && AppUtil.getUser().getVip()) {
-                mTvOpenVip.setText("我的VIP");
-            } else {
-                mTvOpenVip.setText("开通VIP");
-            }
-        } else {
-            mTvOpenVip.setText("开通VIP");
-            mTvNickName.setText("未登录");
-            mTvLogout.setText("立即登录");
-        }
-        mRefreshLayout.setRefreshing(false);
+        });
     }
 
     private void initListener() {
         mRefreshLayout.setOnRefreshListener(() -> {
-            getUserInfo();
+            if (AppUtil.isUserLogin(mActivity, false)) {
+                getUserInfo();
+            } else {
+                mTvOpenVip.setText("开通VIP");
+                mTvNickName.setText("未登录");
+                mTvLogout.setText("立即登录");
+            }
         });
         mHintDialog.setOnRightClickListener((DialogInterface dialog, int which) -> {
             AppUtil.logout();
